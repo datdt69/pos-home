@@ -96,12 +96,26 @@ if exist "!LIBDIR!" (
 )
 set "JVM_JFX=--add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.glass.utils=ALL-UNNAMED --add-opens=javafx.graphics/javafx.css=ALL-UNNAMED --add-opens=javafx.base/com.sun.javafx.runtime=ALL-UNNAMED"
 if /i "%POS_THEME%"=="light" set "POS_EXTRA=-Dpos.theme=light"
+rem Loi "QuantumRenderer: no suitable pipeline" / d3d, sw: may Win7, GPU, RDP, VC++ - thu ve software (sw) truoc. POS 32: mac dinh; tat: set POS_PRISM_SW=0
+if /i "%POS_PRISM_SW%"=="0" (
+  set "DOPRISM=0"
+) else if /i "%POS_PRISM_SW%"=="1" (
+  set "DOPRISM=1"
+) else if defined J32 (
+  set "DOPRISM=1"
+) else (
+  set "DOPRISM=0"
+)
+if "%DOPRISM%"=="1" (
+  if defined POS_EXTRA (set "POS_EXTRA=!POS_EXTRA! -Dprism.order=sw -Dprism.forceGPU=false") else (set "POS_EXTRA=-Dprism.order=sw -Dprism.forceGPU=false")
+  (echo. [run.bat: -Dprism.order=sw may Win7 / pipeline])>>"%RL%"
+)
 
 rem Ghi toan bo loi JVM vao chay_pos.log (1>nul truoc day lam POS khong biet li do)
 ver >nul
 (echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo.)>>"%RL%"
 
-rem Phai long if (POS_DEBUG) roi else (ghi log). CMD: if A if B (x) else (y) — neu A false thi Y khong chay, java co the khong bao gio chay, ma 0 gia!
+rem Phai long if (POS_DEBUG) roi else (ghi log). CMD: if A if B (x) else (y) - neu A false thi Y khong chay, java co the khong bao gio chay, ma 0 gia!
 if /i "%POS_DEBUG%"=="1" (
   if "!JAVW!"=="1" (
     (echo [POS_DEBUG+JAVAW: start /wait javaw] )>>"%RL%"
@@ -212,7 +226,8 @@ del /f /q "%JVT%" 2>nul
 exit /b 1
 
 :log_fail
-(echo. & echo [%date% %time%] [FAIL] ma !EXITCODE! JAVA: !JAVA_CMD! & echo --- java -version: )>>"%RL%"
+rem Phan "phien ban JDK" o duoi CHI la thong tin them, KHONG phai dong loi. Loi that = doan ngan/ Exception o tren trong file nay.
+(echo. & echo [%date% %time%] [FAIL] ma !EXITCODE! JAVA: !JAVA_CMD! & echo --- Thong tin JDK ^(doi chieu, khong phai loi^): )>>"%RL%"
 if defined JAVA_CMD (
   "%JAVA_CMD%" -version 1>>"%RL%" 2>&1
 )
