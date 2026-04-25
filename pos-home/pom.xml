@@ -6,11 +6,12 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>POS nha</name>
-    <description>JavaFX + SQLite</description>
+    <description>JavaFX + SQLite (Java 11; may 32-bit: mvn -Ppos32)</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
-        <javafx.version>21.0.1</javafx.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <javafx.version>17.0.6</javafx.version>
+        <!-- win = Windows 64-bit; may Windows 7/10 32-bit: -Ppos32 (win-x86) -->
         <javafx.platform>win</javafx.platform>
         <sqlite.version>3.45.1.0</sqlite.version>
     </properties>
@@ -38,6 +39,14 @@
             <version>2.10.0</version>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>pos32</id>
+            <properties>
+                <javafx.platform>win-x86</javafx.platform>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <finalName>pos-app</finalName>
         <plugins>
@@ -46,7 +55,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.12.1</version>
                 <configuration>
-                    <release>21</release>
+                    <release>11</release>
                 </configuration>
             </plugin>
             <plugin>

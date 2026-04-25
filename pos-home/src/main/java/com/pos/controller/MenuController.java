@@ -599,7 +599,8 @@ public class MenuController {
          boolean nameOk = !name.isEmpty();
          boolean ok = nameOk && priceOk && cmb.getValue() != null;
          Node saveN = pane.lookupButton(save);
-         if (saveN instanceof Button saveBtn) {
+         if (saveN instanceof Button) {
+            Button saveBtn = (Button) saveN;
             saveBtn.setDisable(!ok);
          }
       };
@@ -613,8 +614,11 @@ public class MenuController {
          return;
       }
       Node saveN2 = pane.lookupButton(save);
-      if (saveN2 instanceof Button sbtn && sbtn.isDisabled()) {
-         return;
+      if (saveN2 instanceof Button) {
+         Button sbtn = (Button) saveN2;
+         if (sbtn.isDisabled()) {
+            return;
+         }
       }
       String name = nameF.getText().trim();
       String ps2 = priceF.getText() == null

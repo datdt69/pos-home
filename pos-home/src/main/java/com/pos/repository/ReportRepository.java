@@ -40,6 +40,34 @@ public class ReportRepository {
       return list;
    }
 
-   public static record ProductSalesRow(int rank, String name, int quantity, double revenue) {
+   public static final class ProductSalesRow {
+      private final int rank;
+      private final String name;
+      private final int quantity;
+      private final double revenue;
+
+      public ProductSalesRow(int rank, String name, int quantity, double revenue) {
+         this.rank = rank;
+         this.name = name;
+         this.quantity = quantity;
+         this.revenue = revenue;
+      }
+
+      public int rank() {
+         return this.rank;
+      }
+
+      public String name() {
+         return this.name;
+      }
+
+      public int quantity() {
+         return this.quantity;
+      }
+
+      public double revenue() {
+         return this.revenue;
+      }
    }
 }
+

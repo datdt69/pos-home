@@ -345,7 +345,8 @@ public class OrderController {
          tb.selectedProperty().addListener((o, a, s) -> {
             if (Boolean.TRUE.equals(s)) {
                for (Toggle x : group.getToggles()) {
-                  if (x instanceof ToggleButton tt) {
+                  if (x instanceof ToggleButton) {
+                     ToggleButton tt = (ToggleButton) x;
                      tt.getStyleClass().remove("chip-on");
                   }
                }

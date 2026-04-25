@@ -50,7 +50,8 @@ public class MainController {
       this.viewSettings = this.loadFxml("/com/pos/settings.fxml", loadErrors);
 
       for (Node v : new Node[]{this.viewOrders, this.viewMenu, this.viewReport, this.viewSettings}) {
-         if (v instanceof Region r) {
+         if (v instanceof Region) {
+            Region r = (Region) v;
             r.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             StackPane.setAlignment(r, Pos.TOP_LEFT);
          }
