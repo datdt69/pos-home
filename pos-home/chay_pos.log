@@ -35,3 +35,15 @@
 [Sat 04/25/2026 17:40:01.94] ERR need Java 11, set JAVA_HOME
 [Sat 04/25/2026 17:41:43.41] run.bat: dung target\pos-app.jar va target\jfx
 [Sat 04/25/2026 17:41:43.42] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
+[Sat 04/25/2026 17:52:02.68] run.bat: dung target\pos-app.jar va target\jfx
+[Sat 04/25/2026 17:52:02.68] run.bat APP_DIR=c:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
+ 
+=== JVM chay @ Sat 04/25/2026 17:52:03.03 === 
+JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
+=== 
+
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+ 
+[OK] ung dung thoat @ Sat 04/25/2026 17:52:09.78 ma 0

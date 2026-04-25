@@ -10,13 +10,12 @@ if defined NEED_DIR (
 set "LAST=%APP_DIR:~-1%"
 if "!LAST!"=="\" set "APP_DIR=%APP_DIR:~0,-1%"
 
-set "ERRF=%TEMP%\pos_last_error.txt"
 set "RL=%APP_DIR%\chay_pos.log"
 
 set "JAR=%APP_DIR%\pos-app.jar"
 set "JFXDIR=%APP_DIR%\jfx"
 set "LIBDIR=%APP_DIR%\lib"
-rem Sau "mvn package" JAR o target\ — chay run.bat ngay duoi thu muc du an van duoc
+rem Sau mvn package JAR o target\ - chay run.bat duoi thu muc du an van duoc
 if not exist "%JAR%" (
   if exist "%APP_DIR%\target\pos-app.jar" (
     set "JAR=%APP_DIR%\target\pos-app.jar"
@@ -30,22 +29,19 @@ cd /d "%APP_DIR%" 2>nul
 (echo [%date% %time%] run.bat APP_DIR=%APP_DIR%)>>"%RL%"
 if not exist "%JAR%" (
   (echo [%date% %time%] ERR khong thay pos-app.jar. Chay: mvn -DskipTests package ^(JAR: %APP_DIR%\pos-app.jar hoac %APP_DIR%\target\pos-app.jar^))>>"%RL%"
-  start "" notepad "%RL%"
-  exit /b 1
+  goto :show_err
 )
 set "JFXN=0"
 for %%F in ("!JFXDIR!\javafx-*.jar") do set /a JFXN+=1
 if !JFXN! lss 1 (
   (echo [%date% %time%] ERR no javafx-*.jar in !JFXDIR!\)>>"%RL%"
-  start "" notepad "%RL%"
-  exit /b 1
+  goto :show_err
 )
 
 call :find_java11
 if errorlevel 1 (
-  (echo [%date% %time%] ERR need Java 11+. Cai JDK hoac dung thu muc Zulu: %LOCALAPPDATA%\pos-jdk\zulu11*  ; hoac set JAVA_HOME)>>"%RL%"
-  start "" notepad "%RL%"
-  exit /b 1
+  (echo [%date% %time%] ERR need Java 11+. Cai JDK hoac dung thu muc Zulu: !LOCALAPPDATA!\pos-jdk\zulu11*  ; hoac set JAVA_HOME)>>"%RL%"
+  goto :show_err
 )
 rem mac dinh dung java.exe (stderr/exit ong dinh hon javaw tren Win7). Im lang: dat POS_USE_JAVAW=1
 if /i "%POS_USE_JAVAW%"=="1" (
@@ -64,16 +60,35 @@ if exist "!LIBDIR!" (
 set "JVM_JFX=--add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.glass.utils=ALL-UNNAMED --add-opens=javafx.graphics/javafx.css=ALL-UNNAMED --add-opens=javafx.base/com.sun.javafx.runtime=ALL-UNNAMED"
 if /i "%POS_THEME%"=="light" set "POS_EXTRA=-Dpos.theme=light"
 
-del "%ERRF%" 2>nul
+rem Ghi toan bo loi JVM vao chay_pos.log (1>nul truoc day lam POS khong biet li do)
+(echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo.)>>"%RL%"
+
 if /i "%POS_DEBUG%"=="1" (
+  (echo [POS_DEBUG=1: ra console, khong ghi vao chay_pos.log] )>>"%RL%"
   "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
 ) else (
-  "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main 1>nul 2>"%ERRF%"
+  "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main 1>>"%RL%" 2>&1
 )
 set "EXITCODE=%ERRORLEVEL%"
 if not "%EXITCODE%"=="0" call :log_fail
 if not "%EXITCODE%"=="0" if exist "%RL%" start "" notepad "%RL%"
-del "%ERRF%" 2>nul
+if not "%EXITCODE%"=="0" if /i not "%POS_NO_PAUSE%"=="1" (
+  echo.
+  echo Loi! Da mo chay_pos.log. Doc file hoac bao lai nguoi cai POS.
+  echo.
+  pause
+)
+if "%EXITCODE%"=="0" (echo. & echo [OK] ung dung thoat @ %date% %time% ma 0)>>"%RL%"
+
+if /i "%POS_KEEP_OPEN%"=="1" (
+  if "%EXITCODE%"=="0" (
+    echo.
+    echo [POS_KEEP_OPEN=1] Thoat thanh cong, Enter de dong cua so.
+    echo.
+    pause
+  )
+)
+
 endlocal & exit /b %EXITCODE%
 
 :find_java11
@@ -153,8 +168,19 @@ del /f /q "%JVT%" 2>nul
 exit /b 1
 
 :log_fail
-(echo [%date% %time%] JAR exit !EXITCODE! JAVA_CMD=!JAVA_CMD!)>>"%RL%"
-if exist "%ERRF%" (type "%ERRF%" 1>>"%RL%" 2>nul) else (echo [stderr file missing])>>"%RL%"
-echo --- java -version: >>"%RL%"
-"%JAVA_CMD%" -version 1>>"%RL%" 2>&1
+(echo. & echo [%date% %time%] [FAIL] ma !EXITCODE! JAVA: !JAVA_CMD! & echo --- java -version: )>>"%RL%"
+if defined JAVA_CMD (
+  "%JAVA_CMD%" -version 1>>"%RL%" 2>&1
+)
 exit /b 0
+
+:show_err
+if exist "%RL%" start "" notepad "%RL%"
+if /i not "%POS_NO_PAUSE%"=="1" (
+  echo.
+  echo Loi! Mo chay_pos.log: %RL%
+  echo.
+  pause
+)
+endlocal
+exit /b 1
