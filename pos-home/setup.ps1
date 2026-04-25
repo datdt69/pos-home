@@ -25,12 +25,21 @@ function Refresh-PathFromRegistry {
 function Get-JavaMajorFromExe {
   param([Parameter(Mandatory = $true)][string]$javaExe)
   if (-not (Test-Path -LiteralPath $javaExe)) { return 0 }
+  $s = ""
   try {
     $raw = & $javaExe -version 2>&1
-    $s = if ($raw -is [array]) { $raw -join " " } else { [string]$raw }
-    if ($s -match 'version "1\.(\d+)"') { return [int]$Matches[1] }
-    if ($s -match 'version "(\d+)"') { return [int]$Matches[1] }
+    $s = ($raw | ForEach-Object { if ($null -eq $_) { "" } elseif ($_ -is [System.Management.Automation.ErrorRecord]) { $_.ToString() } else { $_.ToString() } }) -join " "
   } catch { }
+  if ($s -match "Could not find|The system cannot find|not find|is not recognized") { return 0 }
+  if ([string]::IsNullOrWhiteSpace($s)) {
+    try {
+      $p = (Resolve-Path -LiteralPath $javaExe -ErrorAction SilentlyContinue)
+      if ($p) { $s = (cmd /c """$($p.Path)"" -version 2>&1" | ForEach-Object { $_.ToString() }) -join " " }
+    } catch { }
+  }
+  if ($s -match 'version "1\.(\d+)"') { return [int]$Matches[1] }
+  if ($s -match 'version "(\d+)') { return [int]$Matches[1] }  # 11.0.25 -> nhom dau: 11
+  if ($s -match 'openjdk version "(\d+)') { return [int]$Matches[1] }
   return 0
 }
 
@@ -198,42 +207,76 @@ THU CONG (Windows 64-bit):
 "@
 }
 
+function Test-IsZipFile {
+  param([string]$FilePath)
+  if (-not (Test-Path -LiteralPath $FilePath)) { return $false }
+  try {
+    $fs = [System.IO.File]::OpenRead($FilePath)
+    $b0 = $fs.ReadByte()
+    $b1 = $fs.ReadByte()
+    $fs.Close()
+    return ($b0 -eq 0x50 -and $b1 -eq 0x4B)
+  } catch { return $false }
+}
+
+function Get-BestZulu11Home {
+  param([string]$Base)
+  if (-not (Test-Path -LiteralPath $Base)) { return $null }
+  $dirs = @(
+    (Get-ChildItem -Path $Base -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "zulu11*" } | Sort-Object LastWriteTime -Descending)
+  )
+  foreach ($d in $dirs) {
+    $jtry = Join-Path $d.FullName "bin\java.exe"
+    if (-not (Test-Path -LiteralPath $jtry)) { continue }
+    $mj = Get-JavaMajorFromExe -javaExe $jtry
+    if ($mj -ge $MinJdk) { return [PSCustomObject]@{Root = $d.FullName; Java = $jtry; Major = $mj} }
+  }
+  return $null
+}
+
 function InstallZulu11x86FromUrl {
   $base = Join-Path $env:LOCALAPPDATA "pos-jdk"
-  if (Test-Path -LiteralPath $base) {
-    foreach ($d in Get-ChildItem -Path $base -Directory -ErrorAction SilentlyContinue) {
-      if ($d.Name -notlike 'zulu11*') { continue }
-      $jtry = Join-Path $d.FullName "bin\java.exe"
-      if (-not (Test-Path -LiteralPath $jtry)) { continue }
-      $mj = Get-JavaMajorFromExe -javaExe $jtry
-      if ($mj -ge $MinJdk) {
-        $b = Join-Path $d.FullName "bin"
-        if ($env:Path -notlike "*$b*") { $env:Path = $b + ";" + $env:Path }
-        $env:JAVA_HOME = $d.FullName
-        return $mj, $jtry, $d.FullName
-      }
-    }
-  }
   if (-not (Test-Path -LiteralPath $base)) { New-Item -ItemType Directory -Force -Path $base | Out-Null }
+  $cached = Get-BestZulu11Home -Base $base
+  if ($null -ne $cached) {
+    $b0 = Join-Path $cached.Root "bin"
+    if ($env:Path -notlike "*$b0*") { $env:Path = $b0 + ";" + $env:Path }
+    $env:JAVA_HOME = $cached.Root
+    return $cached.Major, $cached.Java, $cached.Root
+  }
   $zip = Join-Path $env:TEMP "zulu11-win-x86.zip"
   Write-Host ""
-  Write-Host "May 32-bit: dang tai JDK 11 (Zulu) ... (can vao duoc cdn.azul.com)" -ForegroundColor Cyan
+  Write-Host "May 32-bit: dang tai JDK 11 (Zulu) ... (can vao duoc cdn.azul.com, TLS 1.2+)" -ForegroundColor Cyan
   try {
     Invoke-WebRequest -Uri $Zulu11WinX86Url -OutFile $zip -UseBasicParsing
   } catch {
-    throw "Loi khi tai JDK: $_. Hay tai thu cong: $Zulu11WinX86Url va giai nen vao: $base"
+    $extra = "Neu dung Win 7: cai bao cap KB cho TLS 1.2 / SHA-2, hoac tai bang trinh duyet: $Zulu11WinX86Url va giai nen thu cong vao: $base"
+    throw "Loi khi tai JDK: $_.`n$extra"
   }
-  Expand-Archive -Path $zip -DestinationPath $base -Force
-  $sub = Get-ChildItem -Path $base -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'zulu11.*(win_i686|i686|x86)' } | Select-Object -First 1
-  if (-not $sub) { $sub = Get-ChildItem -Path $base -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'zulu11*' } | Select-Object -First 1 }
-  if (-not $sub) { throw "Giai nen xong: khong thay thu muc zulu11* trong $base" }
-  $dest = $sub.FullName
-  $je = Join-Path $dest "bin\java.exe"
-  if (-not (Test-Path -LiteralPath $je)) { throw "Khong thay $je" }
-  $ma = Get-JavaMajorFromExe -javaExe $je
-  if ($ma -lt $MinJdk) { throw "JDK vua tai co phien ban $ma, can $MinJdk+" }
+  $len = (Get-Item -LiteralPath $zip).Length
+  $minB = 25 * 1024 * 1024
+  if ($len -lt $minB) {
+    throw "File tai ve chi $len B (qua nho, thuong la loi/chan — khong dung). Xoa: $zip`nTai: $Zulu11WinX86Url bang trinh duyet, dat zip vao $base, giai nen (thu muc goc: zulu11...)"
+  }
+  if (-not (Test-IsZipFile -FilePath $zip)) {
+    throw "File $zip khong phai zip (thuong la HTML/loi 403). Xoa no. Tai: $Zulu11WinX86Url — dat file zip vung $base, chay lai (hoac giai nen thu cong vao $base). "
+  }
+  try {
+    Expand-Archive -Path $zip -DestinationPath $base -Force
+  } catch {
+    throw "Giai nen that bai: $_.`nGiai nen thu cong (chuot phai giai) vao: $base"
+  }
+  $ok = Get-BestZulu11Home -Base $base
+  if ($null -eq $ok) {
+    $dbg = "Khong chay duoc version cho bat ky java nao. Thu XOA toan bo: $base ro chay lai, hoac cai thu cong JRE 11+ x86.`n"
+    $dall = if (Test-Path $base) { (Get-ChildItem -Path $base -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.Name }) -join ", " } else { "?" }
+    throw "Sau giai nen: java khong bao dung 11+ ($dbg)"
+  }
+  $dest = $ok.Root
+  $je = $ok.Java
+  $ma = $ok.Major
   $b = Join-Path $dest "bin"
-  $env:Path = $b + ";" + $env:Path
+  if ($env:Path -notlike "*$b*") { $env:Path = $b + ";" + $env:Path }
   $env:JAVA_HOME = $dest
   return $ma, $je, $dest
 }
