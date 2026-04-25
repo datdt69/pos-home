@@ -14,6 +14,8 @@ import java.util.Properties;
 public final class AppSettings {
    public static final String DEFAULT_SETTINGS_PATH = "C:\\POS-App\\settings.properties";
    private static final String KEY_PORT = "printer.port";
+   /** Tốc độ nối tiếp. Nhiều máy in nhiệt mặc định 115200 thay vì 9600. */
+   private static final String KEY_BAUD = "printer.baud";
    private static final String KEY_PAPER = "printer.paper";
    private static final String KEY_NAME = "shop.name";
    private static final String KEY_ADDRESS = "shop.address";
@@ -65,6 +67,26 @@ public final class AppSettings {
 
    public void setPrinterPort(String port) {
       this.props.setProperty(KEY_PORT, n(port));
+   }
+
+   public int getPrinterBaudRate() {
+      String s = n(this.props.getProperty(KEY_BAUD, "9600")).trim();
+      try {
+         int b = Integer.parseInt(s);
+         if (b < 1200 || b > 2000000) {
+            return 9600;
+         }
+         return b;
+      } catch (NumberFormatException e) {
+         return 9600;
+      }
+   }
+
+   public void setPrinterBaudRate(int baud) {
+      if (baud < 1200 || baud > 2000000) {
+         baud = 9600;
+      }
+      this.props.setProperty(KEY_BAUD, Integer.toString(baud));
    }
 
    public String getPaper() {

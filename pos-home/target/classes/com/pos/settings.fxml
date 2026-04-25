@@ -30,16 +30,18 @@
                 </HBox>
                 <Button text="Tự tìm máy in" onAction="#onAutoDetect" styleClass="btn btn-secondary" minHeight="36"/>
             </VBox>
-            <Label text="Khổ giấy" styleClass="subtle" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
-            <ComboBox fx:id="cmbPaper" prefWidth="180" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-            <Label text="Tên cửa hàng" styleClass="subtle" GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
-            <TextField fx:id="txtShopName" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-            <Label text="Địa chỉ" styleClass="subtle" GridPane.rowIndex="3" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
-            <TextField fx:id="txtAddress" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-            <Label text="Số điện thoại" styleClass="subtle" GridPane.rowIndex="4" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
-            <TextField fx:id="txtPhone" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-            <Label text="Ghi chú" styleClass="subtle" wrapText="true" GridPane.rowIndex="5" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
-            <Label fx:id="lblSettingsPath" styleClass="result-count" wrapText="true" maxWidth="560" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Tốc độ (baud)&#10;nhiều máy: 115200" styleClass="subtle" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <ComboBox fx:id="cmbBaud" prefWidth="180" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Khổ giấy" styleClass="subtle" GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
+            <ComboBox fx:id="cmbPaper" prefWidth="180" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Tên cửa hàng" styleClass="subtle" GridPane.rowIndex="3" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
+            <TextField fx:id="txtShopName" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Địa chỉ" styleClass="subtle" GridPane.rowIndex="4" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <TextField fx:id="txtAddress" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Số điện thoại" styleClass="subtle" GridPane.rowIndex="5" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
+            <TextField fx:id="txtPhone" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Ghi chú" styleClass="subtle" wrapText="true" GridPane.rowIndex="6" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <Label fx:id="lblSettingsPath" styleClass="result-count" wrapText="true" maxWidth="560" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
         </GridPane>
     </center>
     <bottom>

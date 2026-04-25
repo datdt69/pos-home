@@ -192,6 +192,7 @@ public class OrderController {
                               paid,
                               lines,
                               st.getPrinterPort(),
+                              st.getPrinterBaudRate(),
                               st.getMaxLineChars(),
                               st.getShopName(),
                               st.getShopAddress(),

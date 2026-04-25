@@ -25,6 +25,9 @@ import java.util.stream.Stream;
 public final class PrinterUtil {
    public static final int TIMEOUT_MS = 3000;
    public static final DateTimeFormatter RECEIPT_DF = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.forLanguageTag("vi-VN"));
+   /** Thứ tự ưu tiên khi tự tìm máy in (nhiều model dùng 115200, không phải 9600). */
+   private static final int[] DETECT_BAUDS = {115200, 9600, 19200, 38400, 57600, 230400};
+   private static volatile int lastDetectedBaud = 9600;
    private static final List<Charset> ENCODING_TRY = new ArrayList<>();
 
    static {
@@ -51,16 +54,24 @@ public final class PrinterUtil {
 
    public static String detectPrinterPort() {
       for (String name : getAvailablePorts()) {
-         if (testPort(name)) {
-            return name;
+         for (int baud : DETECT_BAUDS) {
+            if (testPortWithBaud(name, baud)) {
+               lastDetectedBaud = baud;
+               return name;
+            }
          }
       }
       return null;
    }
 
-   private static boolean testPort(String systemPortName) {
+   /** Baud vừa tìm được ở lần gọi {@link #detectPrinterPort()} gần nhất (cùng tốc nếu không tìm thấy). */
+   public static int getLastDetectedBaud() {
+      return lastDetectedBaud;
+   }
+
+   private static boolean testPortWithBaud(String systemPortName, int baud) {
       try {
-         writeToPort(systemPortName, new byte[]{0x1B, 0x40}, TIMEOUT_MS);
+         writeToPort(systemPortName, new byte[]{0x1B, 0x40}, TIMEOUT_MS, baud);
          return true;
       } catch (Exception e) {
          return false;
@@ -68,6 +79,10 @@ public final class PrinterUtil {
    }
 
    public static void printTest(String port) throws IOException {
+      printTest(port, 9600);
+   }
+
+   public static void printTest(String port, int baud) throws IOException {
       if (port == null || port.isBlank()) {
          throw new IOException("Chua chon cong in.");
       }
@@ -81,13 +96,14 @@ public final class PrinterUtil {
       putTextNl(buf, "------------------------");
       putFeed(buf, 3);
       putPartialCut(buf);
-      writeToPort(port, toByteArray(buf), TIMEOUT_MS);
+      writeToPort(port, toByteArray(buf), TIMEOUT_MS, baud);
    }
 
    public static void printReceipt(
       Order order,
       List<OrderItem> items,
       String port,
+      int baudRate,
       int maxLineChars,
       String shopName,
       String address,
@@ -155,7 +171,7 @@ public final class PrinterUtil {
       putAlign(buf, 0);
       putFeed(buf, 3);
       putPartialCut(buf);
-      writeToPort(port, toByteArray(buf), TIMEOUT_MS);
+      writeToPort(port, toByteArray(buf), TIMEOUT_MS, baudRate);
    }
 
    private static void putEscAt(ByteBuffer buf) {
@@ -305,28 +321,36 @@ public final class PrinterUtil {
       return a;
    }
 
-   private static void writeToPort(String systemPortName, byte[] data, int timeoutMs) throws IOException {
+   private static void writeToPort(String systemPortName, byte[] data, int timeoutMs, int baud) throws IOException {
       if (data == null || data.length == 0) {
          return;
-      } else {
-         SerialPort p = SerialPort.getCommPort(systemPortName);
-         p.setBaudRate(9600);
-         p.setNumDataBits(8);
-         p.setNumStopBits(SerialPort.ONE_STOP_BIT);
-         p.setParity(SerialPort.NO_PARITY);
-         p.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, timeoutMs);
-         if (!p.openPort(timeoutMs)) {
-            throw new IOException("Không mở được cổng: " + systemPortName);
-         } else {
-            try {
-               int w = p.writeBytes(data, data.length);
-               if (w < 0) {
-                  throw new IOException("Ghi cổng thất bại: " + systemPortName);
-               }
-            } finally {
-               p.closePort();
-            }
+      }
+      if (baud < 1200) {
+         baud = 9600;
+      }
+      SerialPort p = SerialPort.getCommPort(systemPortName);
+      p.setBaudRate(baud);
+      p.setNumDataBits(8);
+      p.setNumStopBits(SerialPort.ONE_STOP_BIT);
+      p.setParity(SerialPort.NO_PARITY);
+      p.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, timeoutMs);
+      if (!p.openPort(timeoutMs)) {
+         throw new IOException("Không mở được cổng: " + systemPortName);
+      }
+      try {
+         p.setDTR();
+         p.setRTS();
+         try {
+            Thread.sleep(20L);
+         } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
          }
+         int w = p.writeBytes(data, data.length);
+         if (w < 0) {
+            throw new IOException("Ghi cổng thất bại: " + systemPortName);
+         }
+      } finally {
+         p.closePort();
       }
    }
 }
