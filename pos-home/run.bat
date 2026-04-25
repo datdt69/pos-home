@@ -77,6 +77,12 @@ if defined J32 (
     (echo. Neu tren may 64-bit: dung JDK 64, build KHONG -Ppos32. )>>"%RL%"
     goto :show_err
   )
+  if exist "!JFXDIR!\javafx-*-win.jar" (
+    (echo [%date% %time%] ERR Java 32-bit nhung thay jfx 64-bit ^(*-win.jar^). Xoa jfx cu va build lai profile pos32.)>>"%RL%"
+    (echo Danh sach jar trong !JFXDIR!:)>>"%RL%"
+    dir /b "!JFXDIR!\javafx-*.jar" >>"%RL%" 2>&1
+    goto :show_err
+  )
   if not defined POS_OPENJFX_CACHE_CLEAR set "POS_OPENJFX_CACHE_CLEAR=1"
   (echo. May 32: dang ep JavaFX x86 + xoa cache OpenJFX de tranh nap nham DLL 64-bit) >> "%RL%"
   if /i "%POS_OPENJFX_CACHE_CLEAR%"=="1" if exist "%USERPROFILE%\.openjfx\cache" (
@@ -112,6 +118,7 @@ if not defined JFXP (
     call :add_jfx_path "%%~fF"
   )
 )
+(echo [JFX module-path] !JFXP!)>>"%RL%"
 set "CP=%JAR%"
 if exist "!LIBDIR!" (
   for %%F in ("!LIBDIR!\*.jar") do set "CP=!CP!;%%F"
