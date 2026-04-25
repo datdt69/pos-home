@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.pos.controller.MenuController"
+            styleClass="app-screen app-fill" minWidth="800" minHeight="500" prefWidth="Infinity" prefHeight="Infinity" maxWidth="Infinity" maxHeight="Infinity">
+    <top>
+        <VBox spacing="8" styleClass="card">
+            <padding>
+                <Insets top="12" right="12" bottom="8" left="12" />
+            </padding>
+            <Label text="Quản lý thực đơn" styleClass="section-title" />
+            <FlowPane alignment="CENTER_LEFT" hgap="12" vgap="8">
+                <Label text="Danh mục:" styleClass="subtle" />
+                <ComboBox fx:id="cmbFilterCat" prefWidth="200" onAction="#onFilterCategory" />
+                <Button fx:id="btnAdd" text="Thêm món" onAction="#onAdd" styleClass="btn menu-toolbar-btn" />
+                <Button fx:id="btnCatManage" text="Quản lý danh mục" onAction="#onCategoryManage" styleClass="btn btn-secondary menu-toolbar-btn" />
+            </FlowPane>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="4" minHeight="200" minWidth="0" maxWidth="Infinity" maxHeight="Infinity" VBox.vgrow="ALWAYS" styleClass="menu-table-wrap">
+            <Label text="Danh sách món" styleClass="section-title" />
+            <TableView fx:id="table" styleClass="table-orders table-menu-manage" VBox.vgrow="ALWAYS" minHeight="200" minWidth="0" maxWidth="Infinity" maxHeight="Infinity">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="56" minWidth="48" maxWidth="80" style="-fx-alignment: CENTER" />
+                    <TableColumn fx:id="colN" text="Tên món" prefWidth="360" minWidth="140" />
+                    <TableColumn fx:id="colP" text="Giá" prefWidth="130" minWidth="100" maxWidth="160" style="-fx-alignment: CENTER-RIGHT" />
+                    <TableColumn fx:id="colC" text="Danh mục" prefWidth="180" minWidth="100" />
+                    <TableColumn fx:id="colA" text="Bán" prefWidth="80" minWidth="64" maxWidth="100" style="-fx-alignment: CENTER" />
+                    <TableColumn fx:id="colX" text="Thao tác" prefWidth="100" minWidth="88" maxWidth="120" style="-fx-alignment: CENTER" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <padding>
+        <Insets top="8" right="8" bottom="8" left="8" />
+    </padding>
+</BorderPane>

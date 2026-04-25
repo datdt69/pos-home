@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.pos.controller.MainController"
+            styleClass="pos-app" minWidth="800" minHeight="600" prefWidth="Infinity" prefHeight="Infinity" maxWidth="Infinity" maxHeight="Infinity">
+    <top>
+        <HBox styleClass="nav-bar" alignment="CENTER_LEFT" prefHeight="48" minHeight="48" maxHeight="48" spacing="0">
+            <Label text="POS" styleClass="nav-logo" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox styleClass="nav-pills" alignment="CENTER" spacing="6">
+                <Button fx:id="btnOrders" text="Đơn hàng" onAction="#onOrders" styleClass="nav-header-btn" />
+                <Button fx:id="btnMenu" text="Thực đơn" onAction="#onMenu" styleClass="nav-header-btn" />
+                <Button fx:id="btnReport" text="Báo cáo" onAction="#onReport" styleClass="nav-header-btn" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER_RIGHT" spacing="0" styleClass="nav-datetime">
+                <Label fx:id="navClock" text="--:--:--" styleClass="nav-clock" />
+                <Label fx:id="navDate" text="--" styleClass="nav-date" />
+            </VBox>
+        </HBox>
+    </top>
+    <center>
+        <StackPane fx:id="contentStack" styleClass="content-pane" minWidth="0" minHeight="0" prefWidth="Infinity" prefHeight="Infinity" maxWidth="Infinity" maxHeight="Infinity" />
+    </center>
+</BorderPane>

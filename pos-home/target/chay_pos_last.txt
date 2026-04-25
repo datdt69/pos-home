@@ -1,0 +1,30 @@
+=== POS chay-app.bat ===
+Time: Fri 04/24/2026 14:48:21.87
+Dir: C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\
+TGT: C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target
+
+[1] Check mvn
+C:\Users\datdt\Tools\apache-maven-3.9.15\bin\mvn
+C:\Users\datdt\Tools\apache-maven-3.9.15\bin\mvn.cmd
+[1] mvn done BUILT=1 err=0
+[2] OK pos-app.jar
+[2] OK jfx
+[2] OK lib
+
+[3] Sync C:\POS-App
+        1 file(s) copied.
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-base-21.0.1-win.jar
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-base-21.0.1.jar
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-controls-21.0.1-win.jar
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-controls-21.0.1.jar
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-fxml-21.0.1-win.jar
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-graphics-21.0.1-win.jar
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-graphics-21.0.1.jar
+7 File(s) copied
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\lib\slf4j-api-1.7.36.jar
+C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\lib\sqlite-jdbc-3.45.1.0.jar
+2 File(s) copied
+        1 file(s) copied.
+        1 file(s) copied.
+
+[4] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target

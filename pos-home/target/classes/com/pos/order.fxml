@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.pos.controller.OrderController"
+            styleClass="order-root" minWidth="0" minHeight="0" prefWidth="Infinity" prefHeight="Infinity" maxWidth="Infinity" maxHeight="Infinity">
+    <center>
+        <GridPane styleClass="order-split" vgap="0" hgap="12" maxWidth="Infinity" maxHeight="Infinity">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="38" minWidth="300" halignment="LEFT" hgrow="SOMETIMES" />
+                <ColumnConstraints percentWidth="62" minWidth="280" halignment="LEFT" hgrow="ALWAYS" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="ALWAYS" valignment="TOP" minHeight="0" />
+            </rowConstraints>
+            <BorderPane maxWidth="Infinity" maxHeight="Infinity" minHeight="0" minWidth="0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="vbox-orders">
+                <padding>
+                    <Insets top="8" right="8" bottom="8" left="8" />
+                </padding>
+                <top>
+                    <VBox spacing="4" maxWidth="Infinity" fillWidth="true">
+                        <HBox alignment="CENTER_LEFT" spacing="8" maxWidth="Infinity">
+                            <Label fx:id="lblOpenOrdersTitle" text="Đơn hàng hiện tại · 0 đơn mở" styleClass="order-section-title" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button fx:id="btnNewOrder" text="+ Tạo đơn mới" onAction="#onNewOrder" styleClass="btn-new-order" />
+                        </HBox>
+                        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" fitToWidth="true" minHeight="44" maxHeight="44" prefHeight="44" pannable="false" styleClass="order-tabs-scroll" maxWidth="Infinity">
+                            <content>
+                                <TabPane fx:id="tabOpenOrders" styleClass="order-tabs" side="TOP" tabClosingPolicy="ALL_TABS" minHeight="40" maxHeight="40" prefHeight="40" maxWidth="Infinity" />
+                            </content>
+                        </ScrollPane>
+                        <HBox alignment="CENTER_LEFT" spacing="8" styleClass="order-detail-title-row" maxHeight="40" maxWidth="Infinity">
+                            <Label text="CHI TIẾT ĐƠN" styleClass="order-detail-kicker" />
+                            <Label fx:id="lblOrderDetail" text="—" styleClass="order-detail-header" />
+                            <Label fx:id="lblDangGoi" text="đang gọi" styleClass="badge-dang-goi" />
+                        </HBox>
+                    </VBox>
+                </top>
+                <center>
+                    <StackPane maxWidth="Infinity" maxHeight="Infinity" minHeight="0" minWidth="0" styleClass="order-lines-stack" BorderPane.alignment="CENTER">
+                        <ListView fx:id="listItems" styleClass="order-lines-list" maxWidth="Infinity" maxHeight="Infinity" minWidth="0" minHeight="0" />
+                        <VBox fx:id="orderEmptyState" styleClass="order-empty-state" alignment="CENTER" spacing="6" maxWidth="Infinity" maxHeight="Infinity">
+                            <Label text="Chưa có món" styleClass="order-empty-title" />
+                            <Label text="Chọn món ở cột bên phải" styleClass="order-empty-hint" />
+                        </VBox>
+                    </StackPane>
+                </center>
+                <bottom>
+                    <VBox spacing="0" maxWidth="Infinity" fillWidth="true">
+                        <padding>
+                            <Insets top="6" bottom="0" />
+                        </padding>
+                        <VBox styleClass="order-total-panel" spacing="4" maxWidth="Infinity">
+                            <Label text="Tổng cộng" styleClass="order-total-caption" />
+                            <Label fx:id="lblTotal" text="0 đ" styleClass="order-total-amount" />
+                        </VBox>
+                        <GridPane hgap="8" vgap="0" styleClass="order-action-row" maxWidth="Infinity">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="30" minWidth="80" hgrow="SOMETIMES" />
+                                <ColumnConstraints percentWidth="70" minWidth="120" hgrow="SOMETIMES" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="44" vgrow="NEVER" />
+                            </rowConstraints>
+                            <Button fx:id="btnCancel" text="Hủy đơn" onAction="#onCancelOrder" styleClass="btn-cancel-order" GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="Infinity" minHeight="44" minWidth="0" />
+                            <Button fx:id="btnPay" text="Thanh toán" onAction="#onPay" maxWidth="Infinity" minHeight="44" minWidth="0" styleClass="btn-pay-cta" GridPane.columnIndex="1" GridPane.rowIndex="0" contentDisplay="CENTER" />
+                        </GridPane>
+                    </VBox>
+                </bottom>
+            </BorderPane>
+            <VBox styleClass="vbox-menu vbox-menu--order" spacing="6" minWidth="0" minHeight="0" maxWidth="Infinity" maxHeight="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" fillWidth="true">
+                <padding>
+                    <Insets top="8" right="6" bottom="8" left="6" />
+                </padding>
+                <Label text="Thực đơn" styleClass="section-title menu-section-title" maxWidth="Infinity" />
+                <HBox styleClass="search-bar-wrap" alignment="CENTER_LEFT" spacing="8" maxWidth="Infinity" fillHeight="true">
+                    <TextField fx:id="searchField" promptText="Tìm món" onKeyReleased="#onSearchChange" HBox.hgrow="ALWAYS" minHeight="42" maxWidth="Infinity" styleClass="search-field" />
+                </HBox>
+                <FlowPane fx:id="categoryChips" hgap="6" vgap="6" maxWidth="Infinity" />
+                <ScrollPane fx:id="menuScroll" fitToWidth="true" pannable="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" minHeight="0" maxWidth="Infinity" maxHeight="Infinity" styleClass="menu-scroll menu-scroll--order" VBox.vgrow="ALWAYS" minWidth="0">
+                    <content>
+                        <GridPane fx:id="menuGrid" styleClass="menu-grid-4" hgap="10" vgap="10" maxWidth="Infinity" minWidth="0" minHeight="0">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="25" hgrow="ALWAYS" minWidth="90" />
+                                <ColumnConstraints percentWidth="25" hgrow="ALWAYS" minWidth="90" />
+                                <ColumnConstraints percentWidth="25" hgrow="ALWAYS" minWidth="90" />
+                                <ColumnConstraints percentWidth="25" hgrow="ALWAYS" minWidth="90" />
+                            </columnConstraints>
+                        </GridPane>
+                    </content>
+                </ScrollPane>
+            </VBox>
+        </GridPane>
+    </center>
+</BorderPane>

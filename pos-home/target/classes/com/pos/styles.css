@@ -1,0 +1,1966 @@
+/* === POS — dashboard: nền #f1f5f9, thẻ trắng bo 16px, nav sáng + gạch active === */
+
+.root,
+.pos-app {
+    -fx-font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #111827;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 4;
+}
+.scroll-bar:horizontal {
+    -fx-pref-height: 4;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #d1d5db;
+    -fx-background-radius: 2;
+}
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+}
+
+/* --- Top bar: 48px, nav giữa, đồng hồ + cài đặt phải --- */
+.nav-bar {
+    -fx-background-color: #ffffff;
+    -fx-padding: 6 16 6 16;
+    -fx-spacing: 0;
+    -fx-alignment: center-left;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 0 0 1 0;
+    -fx-pref-height: 48;
+    -fx-min-height: 48;
+    -fx-max-height: 48;
+}
+
+.nav-logo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111111;
+    -fx-padding: 0 12 0 0;
+}
+
+.nav-datetime {
+    -fx-alignment: center-right;
+    -fx-padding: 0 4 0 0;
+}
+
+.nav-clock {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.nav-date {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4b5563;
+}
+
+.nav-pills {
+    -fx-padding: 0;
+}
+
+/* Điều hướng: pill nhạt, active = gạch dưới navy */
+.nav-header-btn {
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+    -fx-border-color: transparent transparent transparent transparent;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-min-height: 40;
+    -fx-pref-height: 40;
+    -fx-min-width: 104;
+    -fx-padding: 0 20;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-effect: null;
+}
+
+.nav-header-btn:hover {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #111827;
+}
+
+.nav-header-btn.active {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #1e3a5f transparent;
+    -fx-text-fill: #1e3a5f;
+    -fx-effect: null;
+}
+
+
+.btn-settings {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111827;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-min-height: 40;
+    -fx-padding: 0 12;
+    -fx-cursor: hand;
+}
+
+.btn-settings:hover {
+    -fx-border-color: #111111;
+    -fx-text-fill: #111827;
+    -fx-background-color: #f3f4f6;
+}
+
+.title-app {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+    -fx-padding: 0 8 0 0;
+}
+
+.subtle {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 13px;
+}
+
+.content-pane {
+    -fx-background-color: #f1f5f9;
+    -fx-padding: 0;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+}
+
+.order-root,
+.app-screen,
+.app-fill {
+    -fx-background-color: #f1f5f9;
+    -fx-min-width: 0;
+    -fx-min-height: 0;
+}
+
+.menu-screen,
+.report-screen {
+    -fx-background-color: #f1f5f9;
+}
+
+/* Màn đơn: ~38% đơn / ~62% thực đơn */
+.order-split {
+    -fx-background-color: #f1f5f9;
+    -fx-padding: 12 14 14 14;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+    -fx-background-color: #d1d5db;
+    -fx-pref-width: 5;
+    -fx-padding: 0 2 0 2;
+}
+
+.vbox-orders,
+.vbox-menu,
+.card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 14;
+    -fx-border-radius: 16;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 14, 0, 0, 2);
+}
+
+/* Cột thực đơn bên màn Đơn: rộng theo 50% — không giới hạn 420px */
+.vbox-menu--order {
+    -fx-min-width: 0;
+    -fx-max-width: 100000;
+    -fx-pref-width: -1;
+    -fx-padding: 6 4 6 4;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+}
+
+.vbox-menu--order .section-title,
+.vbox-menu--order .menu-section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.scroll-pane.menu-scroll--order,
+.scroll-pane.menu-scroll.menu-scroll--order {
+    -fx-pref-height: -1;
+    -fx-min-height: 200;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 6 4 6 0;
+}
+
+.scroll-pane.menu-scroll--order .viewport,
+.scroll-pane.menu-scroll--order .content {
+    -fx-background-color: #ffffff;
+}
+
+/* Lưới 3 cột — thẻ món co theo cột; không giới max-width 170px (compact) */
+.vbox-menu--order .menu-card {
+    -fx-pref-width: -1;
+    -fx-min-width: 96;
+    -fx-max-width: 20000;
+}
+
+/* Cột thực đơn thu gọn: POS màn nhỏ — ưu tiên cột trái (đơn) rộng, thực đơn cuộn dọc */
+.vbox-menu--compact {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 6 4 6 4;
+    -fx-max-width: 420;
+}
+
+.vbox-menu--compact .section-title,
+.vbox-menu--compact .menu-section-title {
+    -fx-font-size: 14px;
+    -fx-padding: 0 0 1 0;
+}
+
+.search-field--compact,
+.vbox-menu--compact .search-field--compact {
+    -fx-pref-height: 36;
+    -fx-min-height: 32;
+    -fx-font-size: 13px;
+}
+
+.vbox-menu--compact .chip {
+    -fx-min-height: 30;
+    -fx-font-size: 12px;
+    -fx-padding: 4 8;
+    -fx-background-radius: 6;
+}
+
+.vbox-menu--compact .menu-card,
+.menu-card.menu-card--compact {
+    -fx-pref-width: 150;
+    -fx-min-width: 120;
+    -fx-max-width: 170;
+    -fx-padding: 8 8 8 8;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-spacing: 2;
+}
+
+.menu-card.menu-card--compact .menu-card-name,
+.vbox-menu--compact .menu-card-name {
+    -fx-font-size: 12px;
+    -fx-line-spacing: 1;
+}
+
+.menu-card.menu-card--compact .menu-card-price,
+.vbox-menu--compact .menu-card-price {
+    -fx-font-size: 13px;
+}
+
+.menu-card.menu-card--compact .menu-card-cat,
+.vbox-menu--compact .menu-card-cat {
+    -fx-font-size: 10px;
+}
+
+.scroll-pane.menu-scroll--compact,
+.vbox-menu--compact .menu-scroll--compact {
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 4 2 4 0;
+    -fx-min-height: 80;
+    -fx-pref-height: 120;
+    -fx-background-color: #ffffff;
+}
+
+.order-section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.order-detail-title-row {
+    -fx-padding: 2 0 4 0;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 0 0 1 0;
+}
+
+.order-detail-kicker {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4b5563;
+    -fx-letter-spacing: 1.4px;
+}
+
+.order-detail-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+    -fx-letter-spacing: 0.3px;
+}
+
+.badge-dang-goi {
+    -fx-background-color: #111111;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 10;
+    -fx-background-radius: 6;
+}
+
+.order-total-panel {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 14 16 14 16;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+}
+
+.order-total-caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 600;
+}
+
+.order-total-amount {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.order-action-row {
+    -fx-padding: 8 0 0 0;
+}
+
+/* Tạo đơn — navy mực, pill */
+.btn-new-order {
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-color: #1e3a5f;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #1e3a5f;
+    -fx-border-width: 0;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-min-height: 40;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-effect: null;
+}
+
+.btn-new-order:hover {
+    -fx-background-color: #2d4a73;
+    -fx-text-fill: #ffffff;
+}
+
+.btn-new-order:pressed {
+    -fx-background-color: #152a45;
+}
+
+/* Hủy = navy, Thanh toán = xanh (dashboard mẫu) */
+.btn-cancel-order {
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-color: #1e3a5f;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #1e3a5f;
+    -fx-border-width: 0;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-min-height: 48;
+    -fx-padding: 0 16;
+    -fx-cursor: hand;
+    -fx-effect: null;
+}
+
+.btn-cancel-order:hover:enabled {
+    -fx-background-color: #2d4a73;
+    -fx-text-fill: #ffffff;
+}
+
+.btn-cancel-order:pressed:enabled {
+    -fx-background-color: #152a45;
+}
+
+.btn-cancel-order:disabled {
+    -fx-opacity: 0.45;
+    -fx-cursor: default;
+}
+
+.btn-pay-cta {
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-background-color: #059669;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #059669;
+    -fx-border-width: 0;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-min-height: 48;
+    -fx-padding: 0 20;
+    -fx-cursor: hand;
+    -fx-effect: null;
+}
+
+.btn-pay-cta:hover:enabled {
+    -fx-background-color: #10b981;
+    -fx-border-color: #10b981;
+}
+
+.btn-pay-cta:pressed:enabled {
+    -fx-background-color: #047857;
+    -fx-border-color: #047857;
+}
+
+.btn-pay-cta:disabled {
+    -fx-opacity: 0.4;
+    -fx-cursor: default;
+    -fx-effect: null;
+}
+
+.btn-pay-cta .text {
+    -fx-fill: #ffffff;
+}
+
+.btn-pay-cta-icon {
+    -fx-font-size: 16px;
+}
+
+/* List dòng đơn — card */
+.order-lines-stack {
+    -fx-background-color: transparent;
+}
+
+.order-lines-list {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.order-lines-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 0;
+    -fx-border-color: transparent transparent #d1d5db transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.order-lines-list .list-cell:empty {
+    -fx-border-width: 0;
+}
+
+.order-lines-list .list-cell:filled:selected {
+    -fx-background-color: rgba(0, 0, 0, 0.06);
+}
+
+.order-line-card {
+    -fx-background-color: transparent;
+    -fx-padding: 6 4 6 0;
+}
+
+.order-line-name {
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+    -fx-font-weight: 500;
+}
+
+.order-line-price {
+    -fx-font-size: 14px;
+    -fx-text-fill: #111111;
+    -fx-font-weight: bold;
+    -fx-min-width: 72;
+    -fx-alignment: center-right;
+}
+
+.order-line-qty-label {
+    -fx-min-width: 20;
+    -fx-alignment: center;
+    -fx-text-fill: #111827;
+}
+
+.order-qty-btn {
+    -fx-min-width: 28;
+    -fx-min-height: 28;
+    -fx-max-width: 28;
+    -fx-max-height: 28;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-color: #d1d5db;
+    -fx-text-fill: #111827;
+    -fx-border-color: #4b5563;
+    -fx-effect: null;
+}
+
+.order-qty-btn:hover {
+    -fx-background-color: #e5e7eb;
+}
+
+.order-line-del {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f85149;
+    -fx-border-color: #4b5563;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+    -fx-effect: null;
+    -fx-opacity: 0;
+}
+
+.order-lines-list .list-cell:filled:hover .order-line-del {
+    -fx-opacity: 1;
+}
+
+.order-line-del:hover {
+    -fx-border-color: #f85149;
+    -fx-background-color: rgba(248, 81, 73, 0.12);
+}
+
+.order-empty-state {
+    -fx-background-color: rgba(15, 25, 35, 0.65);
+    -fx-padding: 24;
+    -fx-spacing: 4;
+    -fx-alignment: center;
+}
+
+.order-empty-icon {
+    -fx-font-size: 48px;
+    -fx-text-fill: #4b5563;
+}
+
+.order-empty-title {
+    -fx-font-size: 16px;
+    -fx-text-fill: #4b5563;
+    -fx-font-weight: 600;
+}
+
+.order-empty-hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4b5563;
+}
+
+.btn-compact {
+    -fx-min-height: 36;
+    -fx-padding: 8 14;
+    -fx-font-size: 13px;
+}
+
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: #111827;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.btn-outline:hover {
+    -fx-border-color: #4b5563;
+    -fx-background-color: #e5e7eb;
+}
+
+.btn-pay-primary {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #2d4a73;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.btn-pay-primary:hover {
+    -fx-background-color: #2563a8;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+/* Nút chính */
+.btn {
+    -fx-background-color: #111111;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 18;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-min-height: 40;
+}
+
+.btn:hover {
+    -fx-background-color: #000000;
+}
+
+/* Nút phụ (xanh mực — Hủy đơn, theme) */
+.btn-secondary {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #374151;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #1f2937;
+}
+
+/* Thêm món + Quản lý danh mục: cùng kích thước (đặt sau .btn để không bị ghi đè) */
+.btn.menu-toolbar-btn {
+    -fx-min-width: 200;
+    -fx-pref-width: 200;
+    -fx-max-width: 200;
+    -fx-min-height: 44;
+    -fx-pref-height: 44;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 0 10;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-alignment: center;
+}
+
+/* Nav: gạch chân đỏ khi active, không đổi nền */
+.btn-nav {
+    -fx-background-color: transparent;
+    -fx-text-fill: #374151;
+    -fx-border-color: transparent transparent #d1d5db transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-background-insets: 0;
+    -fx-font-weight: 600;
+    -fx-min-height: 40;
+    -fx-padding: 8 14 6 14;
+    -fx-background-radius: 0;
+}
+
+.btn-nav:hover {
+    -fx-text-fill: #111827;
+}
+
+.btn-nav.active {
+    -fx-background-color: transparent;
+    -fx-text-fill: #111111;
+    -fx-border-color: transparent transparent #111111 transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* --- Tab đơn: scroll ngang, cao ~40, bo 8 --- */
+.order-tabs-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.order-tabs-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.order-tabs {
+    -fx-background-color: transparent;
+    -fx-tab-min-width: 140;
+    -fx-tab-max-width: 180;
+}
+
+.order-tabs .tab-header-area,
+.order-tabs .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.order-tabs .headers-region {
+    -fx-background-color: transparent;
+}
+
+.order-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.order-tabs .tab {
+    -fx-background-color: #f3f4f6;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-padding: 8 14 8 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-min-height: 36;
+    -fx-max-height: 40;
+    -fx-cursor: hand;
+}
+
+.order-tabs .tab:hover {
+    -fx-background-color: #e5e7eb;
+}
+
+.order-tabs .tab:selected {
+    -fx-background-color: #1e3a5f;
+    -fx-border-color: #1e3a5f;
+}
+
+.order-tabs .tab:selected .tab-label {
+    -fx-text-fill: #ffffff;
+}
+
+.order-tabs .tab .tab-label {
+    -fx-text-fill: #374151;
+}
+
+.order-tabs .tab:selected .tab-label {
+    -fx-text-fill: #ffffff;
+}
+
+.order-tabs .tab .tab-close-button {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-background-radius: 4;
+    -fx-min-width: 18;
+    -fx-min-height: 18;
+}
+
+.order-tabs .tab-content-area,
+.order-tabs .tab-pane {
+    -fx-background-color: #ffffff;
+}
+
+/* --- Bảng .table-orders: nền tối (đơn, thực đơn, báo cáo) — cùng giao diện Báo cáo --- */
+.table-orders {
+    -fx-background-color: #ffffff;
+    -fx-control-inner-background: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.table-orders .column-header-background,
+.table-orders .filler,
+.table-orders .table-column,
+.table-orders .nested-column-header {
+    -fx-background-color: #e5e7eb;
+    -fx-border-color: #d1d5db;
+}
+
+.table-orders .column-header .label {
+    -fx-text-fill: #111827;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.table-orders .table-cell {
+    -fx-text-fill: #111827;
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e7eb;
+    -fx-padding: 6 8;
+}
+
+.table-orders .table-row-cell:odd,
+.table-orders .table-row-cell:even {
+    -fx-background-color: #ffffff;
+}
+
+.table-orders .table-row-cell:selected,
+.table-orders .table-row-cell:selected .table-cell {
+    -fx-background-color: #d1d5db;
+    -fx-text-fill: #111827;
+}
+
+/* Lớp cuộn + vùng trống: Modena mặc định sáng nếu không ép (Báo cáo, Quản lý thực đơn) */
+.table-orders .virtual-flow,
+.table-orders .virtual-flow .clipped-container,
+.table-orders .virtual-flow .sheet,
+.table-orders .corner {
+    -fx-background-color: #ffffff;
+}
+
+.table-orders .placeholder,
+.table-orders .placeholder .label {
+    -fx-text-fill: #4b5563;
+    -fx-background-color: #ffffff;
+}
+
+/* Chi tiết đơn: ép toàn bộ bảng nền tối giống thẻ thực đơn (tránh modena sáng / chữ trắng trên nền trắng) */
+.vbox-orders .table-orders,
+.vbox-orders .table-orders .table-view,
+.vbox-orders .table-orders .virtual-flow,
+.vbox-orders .table-orders .virtual-flow .clipped-container,
+.vbox-orders .table-orders .virtual-flow .sheet,
+.vbox-orders .table-orders .corner,
+.vbox-menu--order .table-orders,
+.vbox-menu--order .table-orders .table-view,
+.vbox-menu--order .table-orders .virtual-flow,
+.vbox-menu--order .table-orders .virtual-flow .clipped-container,
+.vbox-menu--order .table-orders .virtual-flow .sheet,
+.vbox-menu--order .table-orders .corner {
+    -fx-background-color: #ffffff;
+}
+
+.vbox-orders .table-orders .table-row-cell,
+.vbox-menu--order .table-orders .table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent #d1d5db transparent transparent;
+}
+
+.vbox-orders .table-orders .table-row-cell:odd,
+.vbox-menu--order .table-orders .table-row-cell:odd {
+    -fx-background-color: #f3f4f6;
+}
+
+.vbox-orders .table-orders .table-row-cell:empty,
+.vbox-menu--order .table-orders .table-row-cell:empty {
+    -fx-background-color: #ffffff;
+}
+
+.vbox-orders .table-orders .table-cell,
+.vbox-menu--order .table-orders .table-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #111827;
+    -fx-font-size: 13px;
+}
+
+.vbox-orders .table-orders .table-cell .text,
+.vbox-menu--order .table-orders .table-cell .text {
+    -fx-fill: #111827;
+}
+
+.vbox-orders .table-orders .table-row-cell:selected,
+.vbox-menu--order .table-orders .table-row-cell:selected {
+    -fx-background-color: #d1d5db;
+}
+
+.vbox-orders .table-orders .table-row-cell:selected .table-cell,
+.vbox-orders .table-orders .table-row-cell:selected .table-cell .text,
+.vbox-menu--order .table-orders .table-row-cell:selected .table-cell,
+.vbox-menu--order .table-orders .table-row-cell:selected .table-cell .text {
+    -fx-fill: #111827;
+    -fx-text-fill: #111827;
+}
+
+/* Bảng chi tiết bên cột trái — tách nền, dòng rộng, placeholder rõ */
+.vbox-orders .table-orders-bill {
+    -fx-border-color: #374151;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-padding: 1;
+}
+
+.vbox-orders .table-orders-bill .table-row-cell,
+.vbox-orders .table-orders-bill .table-row-cell:odd,
+.vbox-orders .table-orders-bill .table-row-cell:even {
+    -fx-pref-height: 40;
+    -fx-min-height: 36;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.vbox-orders .table-orders-bill .table-cell {
+    -fx-text-fill: #111827;
+    -fx-border-color: #d1d5db;
+    -fx-padding: 6 6;
+}
+
+.vbox-orders .table-orders-bill .table-column {
+    -fx-alignment: CENTER-LEFT;
+}
+
+.vbox-orders .table-orders .placeholder,
+.vbox-orders .table-orders .placeholder .label,
+.vbox-menu--order .table-orders .placeholder,
+.vbox-menu--order .table-orders .placeholder .label,
+.order-table-empty {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+    -fx-padding: 20 16 24 16;
+    -fx-alignment: top-center;
+    -fx-text-alignment: center;
+}
+
+/* Ô tìm kiếm + combo */
+.text-field,
+.combo-box-base {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111827;
+    -fx-prompt-text-fill: #4b5563;
+    -fx-background-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-pref-height: 40;
+    -fx-font-size: 14px;
+}
+
+.search-bar-wrap {
+    -fx-alignment: center-left;
+    -fx-spacing: 10;
+    -fx-padding: 0;
+}
+
+.search-bar-icon {
+    -fx-font-size: 18px;
+    -fx-opacity: 0.55;
+    -fx-padding: 0 2 0 2;
+}
+
+.search-icon {
+    -fx-font-size: 16px;
+    -fx-text-fill: #4b5563;
+    -fx-min-width: 24;
+}
+
+.search-field {
+    -fx-min-height: 42;
+    -fx-pref-height: 42;
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+/* Ô tìm món màn Đơn — bo tròn lớn */
+.search-field.search-field--dashboard {
+    -fx-min-height: 44;
+    -fx-pref-height: 44;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-padding: 0 16 0 16;
+    -fx-border-color: #e2e8f0;
+}
+
+/* Nút style app (bóng nhẹ) — tránh dính tất cả control dạng Button */
+.btn {
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 0, 1);
+}
+
+.btn--modern,
+.btn.btn--modern {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-min-height: 40;
+    -fx-padding: 10 18;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.32), 6, 0, 0, 2);
+}
+
+.btn-outline,
+.btn-nav,
+.btn-settings,
+.btn-tbl,
+.btn-tbl-x,
+.vbox-orders .btn-order-foot {
+    -fx-effect: null;
+}
+
+/* DatePicker: ô tròn, nút mũi tên cùng tông tối */
+.date-picker--modern,
+.date-picker.date-picker--modern {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-color: #475569;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-pref-height: 40;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 0, 1);
+}
+
+.date-picker--modern .text-field,
+.date-picker.date-picker--modern .text-field {
+    -fx-background-radius: 8 0 0 8;
+    -fx-border-width: 0;
+}
+
+.date-picker--modern .arrow-button,
+.date-picker.date-picker--modern .arrow-button {
+    -fx-background-color: #e5e7eb;
+    -fx-background-radius: 0 8 8 0;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+/* Combo: popup tối cùng app */
+.combo-box-base:hover {
+    -fx-border-color: #111111;
+}
+
+.combo-box-popup .list-view,
+.combo-box-base .list-cell,
+.combo-box-base .list-cell:hover {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111827;
+}
+
+/* Báo cáo: tách 2 bảng rõ, kéo dọc */
+.report-split,
+.split-pane.report-split {
+    -fx-background-color: #ffffff;
+    -fx-padding: 0;
+}
+
+.split-pane.report-split > .split-pane-divider {
+    -fx-background-color: #e5e7eb;
+    -fx-pref-height: 8;
+    -fx-min-height: 8;
+    -fx-padding: 0;
+}
+
+/* Chip / pill danh mục */
+.chip,
+.category-pill {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-min-height: 36;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.chip:hover {
+    -fx-border-color: #111111;
+    -fx-text-fill: #111827;
+}
+
+.chip:selected,
+.chip-on {
+    -fx-background-color: #1e3a5f;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #1e3a5f;
+}
+
+/* Tổng tiền — teal sáng */
+.label-money,
+.label-big {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+.label-big {
+    -fx-font-size: 32px;
+}
+
+/* Thẻ món bên phải */
+.menu-tile {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 10;
+    -fx-background-radius: 10;
+    -fx-pref-width: 168;
+    -fx-pref-height: 84;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-content-display: top;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-line-spacing: 2;
+}
+
+.menu-tile:hover {
+    -fx-background-color: #e5e7eb;
+    -fx-border-color: #111111;
+}
+
+.menu-tile.unavailable {
+    -fx-background-color: #f3f4f4;
+    -fx-text-fill: #4b5563;
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+/* Lưới món 2 / 3 / 4 cột */
+.menu-grid-2,
+.menu-grid-3,
+.menu-grid-4 {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+/* Thẻ món + vùng ảnh placeholder */
+.menu-card-thumb {
+    -fx-background-color: linear-gradient(to bottom, #e2e8f0, #f1f5f9);
+    -fx-background-radius: 10 10 0 0;
+    -fx-border-color: transparent;
+    -fx-min-height: 72;
+    -fx-max-width: 10000;
+}
+
+.menu-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 0 0 10 0;
+    -fx-cursor: hand;
+    -fx-min-height: 120;
+    -fx-pref-width: 160;
+    -fx-spacing: 4;
+    -fx-max-width: 10000;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 8, 0, 0, 1);
+}
+
+.menu-card:hover {
+    -fx-border-color: #1e3a5f;
+    -fx-effect: dropshadow(gaussian, rgba(30, 58, 95, 0.12), 12, 0, 0, 2);
+}
+
+.menu-card-picked {
+    -fx-border-color: #1e3a5f;
+    -fx-background-color: rgba(30, 58, 95, 0.08);
+}
+
+.menu-card-name {
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 10 0 10;
+}
+
+.menu-card-price {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 10 4 10;
+}
+
+.menu-card-cat {
+    -fx-text-fill: #374151;
+    -fx-font-size: 11px;
+}
+
+.menu-card-het {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+    -fx-padding: 2 0 0 0;
+}
+
+.menu-card.unavailable {
+    -fx-opacity: 0.9;
+    -fx-cursor: default;
+}
+
+.menu-card.unavailable:hover {
+    -fx-border-color: #d1d5db;
+}
+
+.menu-card.unavailable .menu-card-name,
+.menu-card.unavailable .menu-card-price,
+.menu-card.unavailable .menu-card-cat {
+    -fx-text-fill: #4b5563;
+}
+
+/* Nút nhỏ trong bảng (dòng +/−) — xanh dương */
+.btn-tbl {
+    -fx-background-color: #1f2937;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-min-width: 36;
+    -fx-min-height: 32;
+    -fx-max-width: 48;
+    -fx-padding: 2 6;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-tbl:hover {
+    -fx-background-color: #111827;
+}
+
+.btn-tbl-del {
+    -fx-min-width: 48;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.btn-tbl.btn-tbl-x,
+.btn-tbl-x {
+    -fx-min-width: 40;
+    -fx-text-fill: #991b1b;
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.btn-tbl.btn-tbl-x:hover,
+.btn-tbl-x:hover {
+    -fx-text-fill: #7f1d1d;
+    -fx-background-color: rgba(0, 0, 0, 0.06);
+    -fx-background-radius: 6;
+}
+
+/* Cột hành động: nút tối thiểu, vừa 1 bề ngang cột bảng đơn */
+.vbox-orders .btn-tbl.btn-tbl-compact {
+    -fx-min-width: 26;
+    -fx-pref-width: 28;
+    -fx-max-width: 30;
+    -fx-min-height: 28;
+    -fx-pref-height: 28;
+    -fx-max-height: 30;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+}
+
+.vbox-orders .btn-tbl.btn-tbl-x.btn-tbl-x-compact,
+.vbox-orders .btn-tbl-x.btn-tbl-x-compact {
+    -fx-min-width: 24;
+    -fx-pref-width: 28;
+    -fx-max-width: 32;
+    -fx-min-height: 28;
+    -fx-font-size: 15px;
+    -fx-padding: 0;
+}
+
+
+/* TabPane khác, báo cáo */
+.tab-pane .tab-header-area {
+    -fx-background-color: #f3f4f6;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #111111;
+    -fx-text-fill: #ffffff;
+}
+
+/* Khung bảng thực đơn — cùng tông màn Báo cáo (nền #ffffff + viền) */
+.menu-table-wrap {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12 12 12;
+    -fx-spacing: 6;
+    -fx-min-width: 0;
+}
+
+.menu-table-wrap > .section-title {
+    -fx-padding: 0 0 2 0;
+}
+
+/* Bảng trong khung: dòng rộng hơn, dễ quét mắt (giống cảm giác báo cáo) */
+.table-menu-manage {
+    -fx-min-width: 0;
+    -fx-table-header-border-color: #d1d5db;
+    -fx-border-radius: 0 0 6 6;
+    -fx-background-insets: 0;
+}
+
+.menu-table-wrap .table-menu-manage .table-row-cell {
+    -fx-padding: 8 10 8 10;
+    -fx-font-size: 13.5px;
+}
+
+.menu-table-wrap .table-menu-manage .table-cell:empty {
+    -fx-padding: 0;
+}
+
+/* Bảng tối mặc định — chỉ khi KHÔNG dùng .table-orders (tránh ghi đè mọi TableView) */
+.table-view:not(.table-orders) {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+}
+
+.table-view:not(.table-orders) .column-header,
+.table-view:not(.table-orders) .column-header .label {
+    -fx-background-color: #e5e7eb;
+    -fx-text-fill: #111827;
+    -fx-font-weight: bold;
+    -fx-padding: 6;
+}
+
+.table-view:not(.table-orders) .table-cell {
+    -fx-text-fill: #111827;
+}
+
+.status-bar {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4b5563;
+}
+
+.scroll-pane,
+.scroll-pane .viewport,
+.scroll-pane .content {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane.menu-scroll {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 8;
+}
+
+.scroll-pane.menu-scroll .viewport,
+.scroll-pane.menu-scroll .content {
+    -fx-background-color: #ffffff;
+}
+
+.list-view {
+    -fx-font-size: 14px;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111827;
+}
+
+.check-box,
+.date-picker {
+    -fx-text-fill: #111827;
+}
+
+.text-area .content {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111827;
+}
+
+/* ═══ Màn Thực đơn & Báo cáo (bản cải tiến) ═══ */
+.menu-screen .section-title,
+.report-screen .section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+    -fx-padding: 0 0 6 0;
+}
+
+.btn-accent,
+.menu-toolbar-btn {
+    -fx-font-size: 13px;
+}
+
+.btn-accent {
+    -fx-background-color: #1e3a5f;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-padding: 9 18 9 18;
+    -fx-cursor: hand;
+    -fx-border-color: #1e3a5f;
+}
+
+.btn-accent:hover {
+    -fx-background-color: #2d4a73;
+    -fx-border-color: #2d4a73;
+}
+
+.btn-small-accent {
+    -fx-background-color: transparent;
+    -fx-border-color: #1e3a5f;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #1e3a5f;
+    -fx-padding: 5 12 5 12;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+}
+
+.btn-small-accent:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+}
+
+.btn-outline-red {
+    -fx-background-color: transparent;
+    -fx-border-color: #111111;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-text-fill: #111111;
+    -fx-padding: 4 10 4 10;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.btn-outline-blue {
+    -fx-background-color: transparent;
+    -fx-border-color: #111827;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-text-fill: #111827;
+    -fx-padding: 4 10 4 10;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.badge,
+.badge-neutral,
+.badge-green,
+.badge-red,
+.badge-blue,
+.badge-orange,
+.badge-purple {
+    -fx-background-radius: 10;
+    -fx-padding: 2 8 2 8;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+.badge-green {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #166534;
+    -fx-border-color: #bbf7d0;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.badge-blue {
+    -fx-background-color: #0d1f3c;
+    -fx-text-fill: #111827;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.badge-orange {
+    -fx-background-color: #2d1f0d;
+    -fx-text-fill: #b45309;
+    -fx-border-color: #fde68a;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.badge-purple {
+    -fx-background-color: #231835;
+    -fx-text-fill: #a78bfa;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.badge-neutral {
+    -fx-background-color: #d1d5db;
+    -fx-text-fill: #4b5563;
+}
+
+.result-count {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 12px;
+}
+
+.menu-2col {
+    -fx-padding: 0 0 0 0;
+}
+
+/* Sidebar danh mục */
+.category-list,
+.category-list .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 2;
+}
+
+.category-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 6 8 6 8;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.category-list .list-cell .category-name-label {
+    -fx-text-fill: #111827;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+
+.category-list .list-cell .category-count-label {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 14px;
+}
+
+.btn-cat-icon,
+.btn-cat-icon-danger {
+    -fx-font-size: 11px;
+    -fx-min-width: 28;
+    -fx-padding: 2 4 2 4;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #4b5563;
+    -fx-border-color: #4b5563;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-cat-icon-danger {
+    -fx-text-fill: #111111;
+    -fx-border-color: #9ca3af;
+}
+
+/* Chỉ tên + số lượng chữ trắng; KHÔNG áp chữ trắng lên nút (nền trắng → mất chữ) */
+.category-list .list-cell:selected .category-name-label,
+.category-list .list-cell:selected .category-count-label {
+    -fx-text-fill: #ffffff;
+}
+
+.category-list .list-cell:selected .btn-cat-icon,
+.category-list .list-cell:selected .btn-cat-icon-danger {
+    -fx-background-color: #f8fafc;
+    -fx-text-fill: #1e3a5f;
+    -fx-border-color: #cbd5e1;
+}
+
+.category-list .list-cell:selected .btn-cat-icon-danger {
+    -fx-text-fill: #991b1b;
+    -fx-border-color: #fca5a5;
+}
+
+.category-list .list-cell:selected {
+    -fx-background-color: #1e3a5f;
+    -fx-background-radius: 8;
+    -fx-border-color: #1e3a5f;
+    -fx-border-width: 0 0 0.5 0;
+}
+
+.category-list .list-cell:hover:empty,
+.category-list .list-cell:hover:selected,
+.category-list .list-cell:hover {
+    -fx-border-color: #d1d5db;
+}
+
+.category-list .list-cell:hover:not(:selected) {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 8;
+}
+
+.combo-filter {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #4b5563;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* Bảng món: style user + giữ tông table-orders */
+.menu-table,
+.menu-table .table-view {
+    -fx-control-inner-background: #ffffff;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.menu-table .table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #d1d5db transparent;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-font-size: 16px;
+}
+
+.menu-table .table-row-cell .table-column {
+    -fx-alignment: CENTER-LEFT;
+}
+
+.menu-table .table-row-cell:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.menu-table .table-row-cell:selected,
+.menu-table .table-row-cell:selected .table-cell {
+    -fx-background-color: #d1d5db;
+    -fx-text-fill: #111827;
+}
+
+/* Nút trong cột Thao tác cùng tầm chữ với dòng */
+.menu-table .table-row-cell .table-cell .button {
+    -fx-font-size: 14px;
+}
+
+.menu-table .column-header .label,
+.menu-table .column-header-background .label,
+.menu-table .column-header {
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.menu-table .column-header-background,
+.menu-table .filler,
+.menu-table .nested-column-header {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+}
+
+.menu-avail-switch {
+    -fx-padding: 0 4 0 0;
+    -fx-cursor: hand;
+}
+
+/* Dialog món (custom-dialog) */
+.custom-dialog,
+.custom-dialog .dialog-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.custom-dialog .header-panel {
+    -fx-background-color: #ffffff;
+}
+
+.custom-dialog .dialog-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.field-label,
+.custom-dialog .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #374151;
+}
+
+.field-error {
+    -fx-font-size: 11px;
+    -fx-text-fill: #111111;
+    -fx-wrap-text: true;
+    -fx-max-width: 400;
+}
+
+.dialog-field,
+.dialog-combo,
+.dialog-combo .list-cell,
+.dialog-combo .arrow-button {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #111827;
+    -fx-prompt-text-fill: #6b7280;
+    -fx-padding: 10 12 10 12;
+    -fx-pref-height: 40;
+}
+
+.dialog-field-error {
+    -fx-border-color: #111111;
+}
+
+.custom-dialog .radio-button,
+.custom-dialog .text-field,
+.custom-dialog .combo-box {
+    -fx-text-fill: #111827;
+}
+
+/* Report — cùng ngôn ngữ thẻ dashboard */
+.stat-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-border-color: transparent;
+    -fx-border-radius: 16;
+    -fx-border-width: 0;
+    -fx-padding: 16 20 16 20;
+    -fx-min-height: 100px;
+    -fx-pref-width: 200;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 12, 0, 0, 2);
+}
+
+.stat-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+
+.stat-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #374151;
+}
+
+.stat-rev,
+.stat-value.stat-rev {
+    -fx-text-fill: #000000;
+}
+
+.stat-trend-up {
+    -fx-font-size: 11px;
+    -fx-text-fill: #374151;
+    -fx-wrap-text: true;
+}
+
+.stat-trend-down {
+    -fx-font-size: 11px;
+    -fx-text-fill: #111111;
+    -fx-wrap-text: true;
+}
+
+.order-sum-footer {
+    -fx-text-fill: #111827;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 4 0 0 0;
+}
+
+.top5-scroll,
+.top5-scroll .viewport,
+.top5-scroll .content {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.top5-name {
+    -fx-text-fill: #111827;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+.top5-sub {
+    -fx-text-fill: #4b5563;
+    -fx-font-size: 12px;
+}
+
+.top5-rev {
+    -fx-text-fill: #111827;
+    -fx-font-size: 12px;
+    -fx-alignment: center-right;
+    -fx-min-width: 100;
+    -fx-alignment: CENTER-RIGHT;
+}
+
+.top-rank-1 { -fx-text-fill: #b45309; -fx-font-weight: bold; -fx-min-width: 32; }
+.top-rank-2 { -fx-text-fill: #4b5563; -fx-font-weight: bold; -fx-min-width: 32; }
+.top-rank-3 { -fx-text-fill: #b45309; -fx-font-weight: bold; -fx-min-width: 32; }
+.top-rank-4, .top-rank-5 { -fx-text-fill: #374151; -fx-font-weight: bold; -fx-min-width: 32; }
+
+.report-orders { }
+
+.spinner-year .increment-arrow-button,
+.spinner-year .decrement-arrow-button {
+    -fx-background-color: #e5e7eb;
+    -fx-border-color: #4b5563;
+}
+
+/* ═══ Thực đơn & Báo cáo — cùng bố cục dashboard với màn Đơn hàng ═══ */
+.menu-page-root,
+.report-page-root {
+    -fx-background-color: transparent;
+}
+
+.menu-hero-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+.menu-page-hero {
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 14, 0, 0, 2);
+}
+
+.report-filter-card {
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 14, 0, 0, 2);
+}
+
+.menu-side-panel {
+    -fx-min-height: 0;
+}
+
+.menu-screen .menu-side-panel .order-section-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: 700;
+}
+
+/* DatePicker báo cáo — bo tròn, viền nhạt */
+.date-picker--dashboard,
+.date-picker.date-picker--dashboard {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-pref-height: 44;
+    -fx-effect: null;
+}
+
+.date-picker--dashboard .text-field,
+.date-picker.date-picker--dashboard .text-field {
+    -fx-background-radius: 10 0 0 10;
+    -fx-border-width: 0;
+}
+
+.date-picker--dashboard .arrow-button,
+.date-picker.date-picker--dashboard .arrow-button {
+    -fx-background-color: #f1f5f9;
+    -fx-background-radius: 0 10 10 0;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.combo-pill {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+/* Nút phân trang báo cáo */
+.btn-outline.btn-pill {
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-min-height: 38;
+    -fx-padding: 8 18;
+    -fx-border-color: #1e3a5f;
+    -fx-text-fill: #1e3a5f;
+    -fx-border-width: 1.5;
+}
+
+.btn-outline.btn-pill:hover {
+    -fx-background-color: rgba(30, 58, 95, 0.08);
+    -fx-border-color: #1e3a5f;
+    -fx-text-fill: #1e3a5f;
+}
+
+.report-split-h {
+    -fx-alignment: top-left;
+}
+
+.top5-scroll--dashboard,
+.top5-scroll--dashboard .viewport,
+.top5-scroll--dashboard .content {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+/* Báo cáo: kéo full ngang, bớt padding thẻ để 2 bảng rộng hơn */
+.report-page-root {
+    -fx-background-color: transparent;
+}
+.report-tables-grid {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.report-screen .vbox-orders,
+.report-screen .vbox-menu--order {
+    -fx-padding: 10 8 10 8;
+}
+
+/* Màn Báo cáo — chữ to, chip kỳ đồng bộ, 2 cột cùng hàng tiêu đề */
+.report-screen .order-section-title {
+    -fx-font-size: 19px;
+    -fx-font-weight: 700;
+}
+.report-screen .section-title.menu-section-title {
+    -fx-font-size: 19px;
+}
+.report-screen .subtle {
+    -fx-font-size: 14px;
+}
+.report-screen .card .subtle {
+    -fx-font-size: 15px;
+}
+.report-screen .card .order-section-title {
+    -fx-font-size: 20px;
+}
+.report-screen .label.stat-label {
+    -fx-font-size: 14px;
+}
+.report-screen .label.stat-value {
+    -fx-font-size: 18px;
+}
+.report-screen .stat-trend-up,
+.report-screen .stat-trend-down {
+    -fx-font-size: 13px;
+}
+.report-screen .order-sum-footer {
+    -fx-font-size: 15px;
+}
+/* Báo cáo: cùng họ bảng thực đơn (.menu-table) — dòng 17px, header 15px (menu: 16/14) */
+.report-screen .menu-table.table-orders .table-row-cell {
+    -fx-font-size: 17px;
+    -fx-pref-height: 42;
+    -fx-min-height: 40;
+}
+.report-screen .menu-table.table-orders .table-cell {
+    -fx-font-size: 17px;
+    -fx-padding: 6 10;
+}
+.report-screen .menu-table.table-orders .table-cell .text {
+    -fx-font-size: 17px;
+}
+.report-screen .menu-table.table-orders .column-header .label,
+.report-screen .menu-table.table-orders .column-header-background .label,
+.report-screen .menu-table.table-orders .column-header {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #374151;
+}
+.report-screen .btn-outline.btn-pill {
+    -fx-font-size: 15px;
+    -fx-min-height: 40;
+}
+/* Toggle kỳ: JavaFX ToggleButton dùng :selected */
+.report-screen .toggle-button.chip {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 16;
+    -fx-min-height: 40;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+    -fx-background-radius: 20;
+}
+.report-screen .toggle-button.chip:hover {
+    -fx-border-color: #111111;
+    -fx-text-fill: #111827;
+}
+.report-screen .toggle-button.chip:selected,
+.report-screen .toggle-button.chip.chip-on {
+    -fx-background-color: #1e3a5f;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #1e3a5f;
+}
+.report-table-header {
+    -fx-min-height: 70;
+}
+.report-screen .date-picker--dashboard,
+.report-screen .date-picker.date-picker--dashboard {
+    -fx-pref-height: 46;
+}
+.report-screen .combo-filter.combo-pill,
+.report-screen .spinner-year {
+    -fx-font-size: 15px;
+}
+.report-screen .btn-new-order,
+.report-screen .btn-pay-cta {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+}

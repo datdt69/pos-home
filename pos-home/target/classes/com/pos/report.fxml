@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.pos.controller.ReportController"
+            styleClass="order-root report-screen" minWidth="0" minHeight="0" prefWidth="Infinity" prefHeight="Infinity" maxWidth="Infinity" maxHeight="Infinity">
+    <center>
+        <VBox spacing="10" styleClass="report-page-root" maxWidth="Infinity" maxHeight="Infinity" VBox.vgrow="ALWAYS" minWidth="0" minHeight="0">
+            <padding>
+                <Insets top="8" right="4" bottom="8" left="4"/>
+            </padding>
+            <VBox spacing="10" styleClass="card" maxWidth="Infinity">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="Infinity">
+                    <Label text="Báo cáo bán hàng" styleClass="order-section-title"/>
+                    <Region HBox.hgrow="ALWAYS" minWidth="0"/>
+                    <Button fx:id="btnExport" text="Xuất báo cáo" onAction="#onExport" styleClass="btn-new-order" minHeight="44" minWidth="0"/>
+                </HBox>
+                <HBox spacing="10" alignment="CENTER_LEFT" maxWidth="Infinity">
+                    <Label text="Kỳ:" styleClass="subtle"/>
+                    <ToggleButton fx:id="tDay" text="Theo ngày" onAction="#onRangeChange" styleClass="chip"/>
+                    <ToggleButton fx:id="tWeek" text="Theo tuần" onAction="#onRangeChange" styleClass="chip"/>
+                    <ToggleButton fx:id="tMonth" text="Theo tháng" onAction="#onRangeChange" styleClass="chip"/>
+                    <DatePicker fx:id="dpRef" styleClass="date-picker--dashboard" minWidth="0"/>
+                    <Label fx:id="lblPickHint" text="Chọn ngày" styleClass="subtle" minWidth="0"/>
+                    <ComboBox fx:id="comboMonth" styleClass="combo-filter combo-pill" visible="false" managed="false" minWidth="160" prefWidth="200"/>
+                    <Region HBox.hgrow="ALWAYS" minWidth="0"/>
+                    <Button fx:id="btnView" text="Làm mới" onAction="#onViewReport" styleClass="btn-pay-cta" minHeight="44" minWidth="0"/>
+                </HBox>
+                <Label fx:id="lblRangeHint" text="" styleClass="subtle" wrapText="true" maxWidth="Infinity"/>
+                <FlowPane alignment="TOP_LEFT" hgap="12" vgap="10" maxWidth="Infinity">
+                    <VBox spacing="4" maxWidth="Infinity" styleClass="stat-card" prefWidth="200">
+                        <Label text="Doanh thu" styleClass="stat-label"/>
+                        <Label fx:id="lblStatRevenue" text="0 đ" styleClass="stat-value stat-rev"/>
+                        <Label fx:id="lblRevenueTrend" text="" styleClass="stat-trend-up" wrapText="true" maxWidth="190"/>
+                    </VBox>
+                    <VBox spacing="4" maxWidth="Infinity" styleClass="stat-card" prefWidth="200">
+                        <Label text="Số đơn thanh toán" styleClass="stat-label"/>
+                        <Label fx:id="lblStatOrders" text="0" styleClass="stat-value" style="-fx-text-fill: #111827;"/>
+                    </VBox>
+                    <VBox spacing="4" maxWidth="Infinity" styleClass="stat-card" prefWidth="200">
+                        <Label text="Trung bình / đơn" styleClass="stat-label"/>
+                        <Label fx:id="lblStatAvg" text="0 đ" styleClass="stat-value" style="-fx-text-fill: #111827; -fx-font-size: 20px;"/>
+                    </VBox>
+                    <VBox spacing="4" maxWidth="Infinity" styleClass="stat-card" prefWidth="220">
+                        <Label text="Món bán nhiều nhất" styleClass="stat-label"/>
+                        <Label fx:id="lblStatBest" text="—" styleClass="stat-value" style="-fx-font-size: 16px; -fx-text-fill: #111827;"/>
+                    </VBox>
+                </FlowPane>
+            </VBox>
+            <GridPane vgap="0" hgap="10" styleClass="report-tables-grid" maxWidth="Infinity" maxHeight="Infinity" VBox.vgrow="ALWAYS" minWidth="0" minHeight="0">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="44" minWidth="340" halignment="LEFT" hgrow="SOMETIMES" />
+                    <ColumnConstraints percentWidth="56" minWidth="360" halignment="LEFT" hgrow="ALWAYS" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="ALWAYS" valignment="TOP" minHeight="0" />
+                </rowConstraints>
+                <BorderPane maxWidth="Infinity" maxHeight="Infinity" minHeight="0" minWidth="0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" styleClass="vbox-orders" GridPane.valignment="TOP">
+                    <padding>
+                        <Insets top="0" right="0" bottom="0" left="0" />
+                    </padding>
+                    <top>
+                        <VBox spacing="2" maxWidth="Infinity" fillWidth="true" styleClass="report-table-header">
+                            <Label text="Đơn đã thanh toán" styleClass="order-section-title" maxWidth="Infinity" />
+                            <Label text="Theo kỳ đã chọn: một ngày, một tuần lịch (T2–CN) hoặc tháng dương lịch (tối đa 3 tháng dữ liệu gần nhất)" styleClass="subtle" wrapText="true" maxWidth="Infinity" minHeight="36" />
+                        </VBox>
+                    </top>
+                    <center>
+                        <TableView fx:id="tableOrders" maxWidth="Infinity" maxHeight="Infinity" minWidth="0" minHeight="0" styleClass="table-orders report-orders menu-table" tableMenuButtonVisible="false" BorderPane.alignment="CENTER">
+                            <columns>
+                                <TableColumn fx:id="colStt" text="STT" prefWidth="56" minWidth="48" maxWidth="88" style="-fx-alignment: CENTER"/>
+                                <TableColumn fx:id="colONum" text="Đơn số" prefWidth="128" minWidth="88" maxWidth="200"/>
+                                <TableColumn fx:id="colOTime" text="Thời gian" prefWidth="220" minWidth="150" maxWidth="2000"/>
+                                <TableColumn fx:id="colOTot" text="Tổng tiền" prefWidth="132" minWidth="100" maxWidth="240" style="-fx-alignment: CENTER-RIGHT"/>
+                            </columns>
+                        </TableView>
+                    </center>
+                    <bottom>
+                        <VBox spacing="6" maxWidth="Infinity" fillWidth="true">
+                            <padding>
+                                <Insets top="8" bottom="0" />
+                            </padding>
+                            <HBox alignment="CENTER" spacing="12">
+                                <Button fx:id="btnPrev" text="&lt; Trước" onAction="#onPagePrev" styleClass="btn-outline btn-pill"/>
+                                <Label fx:id="lblPage" text="Trang 1/1" styleClass="subtle"/>
+                                <Button fx:id="btnNext" text="Sau &gt;" onAction="#onPageNext" styleClass="btn-outline btn-pill"/>
+                            </HBox>
+                            <Label fx:id="lblOrderTotalSum" text="" styleClass="order-sum-footer" maxWidth="Infinity"/>
+                        </VBox>
+                    </bottom>
+                </BorderPane>
+                <VBox styleClass="vbox-menu vbox-menu--order" spacing="6" minWidth="0" minHeight="0" maxWidth="Infinity" maxHeight="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" fillWidth="true" GridPane.valignment="TOP">
+                    <padding>
+                        <Insets top="0" right="0" bottom="0" left="0" />
+                    </padding>
+                    <VBox spacing="2" maxWidth="Infinity" styleClass="report-table-header" minHeight="70">
+                        <Label text="Sản phẩm đã bán" styleClass="section-title menu-section-title" maxWidth="Infinity" />
+                        <Label text="Theo kỳ đã chọn: một ngày, một tuần lịch (T2–CN) hoặc tháng dương lịch (tối đa 3 tháng dữ liệu gần nhất)" styleClass="subtle" wrapText="true" maxWidth="Infinity" minHeight="36" />
+                    </VBox>
+                    <TableView fx:id="tableProducts" VBox.vgrow="ALWAYS" minHeight="160" minWidth="0" maxWidth="Infinity" maxHeight="Infinity" styleClass="table-orders product-sales-table menu-table" tableMenuButtonVisible="false">
+                        <columns>
+                            <TableColumn fx:id="colPStt" text="STT" prefWidth="56" minWidth="48" maxWidth="80" style="-fx-alignment: CENTER"/>
+                            <TableColumn fx:id="colPName" text="Tên món" prefWidth="360" minWidth="160" maxWidth="4000"/>
+                            <TableColumn fx:id="colPQty" text="Số lượng" prefWidth="104" minWidth="80" maxWidth="160" style="-fx-alignment: CENTER"/>
+                            <TableColumn fx:id="colPRev" text="Doanh thu" prefWidth="152" minWidth="112" maxWidth="280" style="-fx-alignment: CENTER-RIGHT"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </GridPane>
+        </VBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.pos.controller.MenuController"
+            styleClass="app-screen app-fill menu-screen" minWidth="800" minHeight="500"
+            maxWidth="Infinity" maxHeight="Infinity">
+    <center>
+        <VBox spacing="12" styleClass="menu-page-root" maxWidth="Infinity" maxHeight="Infinity" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets top="12" right="14" bottom="14" left="14"/>
+            </padding>
+            <VBox spacing="4" styleClass="card menu-page-hero" maxWidth="Infinity">
+                <padding>
+                    <Insets top="12" right="14" bottom="10" left="14"/>
+                </padding>
+                <Label text="Quản lý thực đơn" styleClass="section-title menu-hero-title"/>
+            </VBox>
+            <GridPane styleClass="order-split menu-page-split" vgap="0" hgap="12" maxWidth="Infinity" maxHeight="Infinity" VBox.vgrow="ALWAYS">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="32" minWidth="220" halignment="LEFT" hgrow="SOMETIMES"/>
+                    <ColumnConstraints percentWidth="68" minWidth="320" halignment="LEFT" hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="ALWAYS" valignment="TOP" minHeight="0"/>
+                </rowConstraints>
+                <VBox spacing="10" minWidth="0" minHeight="0" maxWidth="Infinity" maxHeight="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="vbox-orders menu-side-panel" fillWidth="true">
+                    <HBox alignment="CENTER_LEFT" spacing="6">
+                        <Label text="Danh mục" styleClass="order-section-title"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="+ Thêm" onAction="#onAddCategory" styleClass="btn-small-accent" minWidth="60"/>
+                    </HBox>
+                    <ListView fx:id="categoryList" VBox.vgrow="ALWAYS" styleClass="category-list" minHeight="200"/>
+                </VBox>
+                <VBox spacing="10" minWidth="0" minHeight="0" maxWidth="Infinity" maxHeight="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="vbox-menu menu-side-panel" fillWidth="true">
+                    <HBox spacing="10" alignment="CENTER_LEFT" maxWidth="Infinity">
+                        <Label text="🔍" styleClass="search-bar-icon" minWidth="24"/>
+                        <TextField fx:id="searchField" promptText="Tìm món…" HBox.hgrow="ALWAYS" minHeight="44"
+                                   styleClass="search-field search-field--dashboard" maxWidth="Infinity"/>
+                        <ComboBox fx:id="statusFilter" prefWidth="150" minHeight="44" styleClass="combo-filter combo-pill" maxWidth="180"/>
+                        <Button text="+ Thêm món" onAction="#onAdd" styleClass="btn-accent" minHeight="44" minWidth="100"/>
+                    </HBox>
+                    <Label fx:id="lblResultCount" text="Đang hiển thị 0/0 món" styleClass="result-count" maxWidth="Infinity"/>
+                    <TableView fx:id="menuTable" VBox.vgrow="ALWAYS" minHeight="200" minWidth="0" maxWidth="Infinity"
+                               styleClass="menu-table table-orders" tableMenuButtonVisible="false">
+                        <columns>
+                            <TableColumn fx:id="colName" text="Tên món" prefWidth="320" minWidth="120" maxWidth="2000"/>
+                            <TableColumn fx:id="colCat" text="Danh mục" prefWidth="120" minWidth="80" maxWidth="400"
+                                         style="-fx-alignment: CENTER"/>
+                            <TableColumn fx:id="colPrice" text="Giá" prefWidth="100" minWidth="80" maxWidth="200"
+                                         style="-fx-alignment: CENTER-RIGHT"/>
+                            <TableColumn fx:id="colAvail" text="Trạng thái" prefWidth="120" minWidth="100" maxWidth="180"
+                                         style="-fx-alignment: CENTER"/>
+                            <TableColumn fx:id="colAct" text="Thao tác" prefWidth="200" minWidth="160" maxWidth="400"
+                                         style="-fx-alignment: CENTER" sortable="false"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </GridPane>
+        </VBox>
+    </center>
+</BorderPane>
