@@ -494,6 +494,7 @@ Write-Host ""
 Write-Host "=== XONG ===" -ForegroundColor Green
 Write-Host "  Shortcut: $linkPath"
 Write-Host "  (May 32-bit: da build voi -Ppos32; can JDK 11 x86, run.bat dung JAR + JavaFX 32)" -ForegroundColor DarkGray
+Write-Host "  (Loi 'AMD 64-bit .dll on IA 32' khi chay: xoa thu muc .openjfx\cache dung cua user; hoac: `$env:POS_OPENJFX_CACHE_CLEAR='1'; .\run.bat` 1 lan)" -ForegroundColor DarkGray
 Write-Host '  Ghi chu: file zip tu may khac - chuot phai > Properties > Unblock neu Windows chan.' -ForegroundColor DarkGray
 Write-Host '  Vao Desktop, bam dup "POS nha".' -ForegroundColor Gray
 Write-Host ""

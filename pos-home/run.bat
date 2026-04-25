@@ -56,6 +56,23 @@ if errorlevel 1 (
   (echo [%date% %time%] ERR need Java 11+. Cai JDK hoac dung thu muc Zulu: !LOCALAPPDATA!\pos-jdk\zulu11*  ; hoac set JAVA_HOME)>>"%RL%"
   goto :show_err
 )
+rem May 32-bit: JAR javafx phai *-win-x86*. (ban *-win.jar* la 64 bit). Cache .openjfx cu 64 -> UnsatisfiedLinkError AMD64 on IA32
+set "J32="
+"%JAVA_CMD%" -XshowSettings:properties 2>nul | findstr /c:"sun.arch.data.model = 32" >nul && set "J32=1"
+if defined J32 (
+  set "HASW86=0"
+  for %%F in ("!JFXDIR!\javafx-*-win-x86*.jar") do set "HASW86=1"
+  if "!HASW86!"=="0" (
+    (echo [%date% %time%] ERR Java 32-bit ma jfx khong *-win-x86*. Cai: mvnw clean -Ppos32 -DskipTests package, lay target\jfx)>>"%RL%"
+    (echo. Neu tren may 64-bit: dung JDK 64, build KHONG -Ppos32. )>>"%RL%"
+    goto :show_err
+  )
+  (echo. May 32: loi native 64 tren JVM 32 - xoa: %USERPROFILE%\.openjfx\cache hoac set POS_OPENJFX_CACHE_CLEAR=1 roi run) >> "%RL%"
+  if /i "%POS_OPENJFX_CACHE_CLEAR%"=="1" if exist "%USERPROFILE%\.openjfx\cache" (
+    (echo [%date% %time%] POS_OPENJFX_CACHE_CLEAR=1: xoa .openjfx\cache) >> "%RL%"
+    rd /s /q "%USERPROFILE%\.openjfx\cache" 2>nul
+  )
+)
 rem mac dinh dung java.exe (stderr/exit ong dinh hon javaw tren Win7). Im lang: dat POS_USE_JAVAW=1
 if /i "%POS_USE_JAVAW%"=="1" (
   for %%E in ("!JAVA_CMD!") do set "JAB=%%~dpE"
