@@ -33,12 +33,12 @@ if not exist "%JAR%" (
 
 cd /d "%APP_DIR%" 2>nul
 if defined USING_TARGET (
-  (echo [%date% %time%] run.bat APP_DIR=%APP_DIR% ^| JAR+jfx+lib: target\ ^(sau mvn package^))>>"%RL%"
+  (echo [%date% %time%] run.bat APP_DIR=!APP_DIR! ^| JAR+jfx+lib: target\ ^(sau mvn package^))>>"%RL%"
 ) else (
-  (echo [%date% %time%] run.bat APP_DIR=%APP_DIR% ^| JAR+jfx+lib: thu muc goc)>>"%RL%"
+  (echo [%date% %time%] run.bat APP_DIR=!APP_DIR! ^| JAR+jfx+lib: thu muc goc)>>"%RL%"
 )
 if not exist "%JAR%" (
-  (echo [%date% %time%] ERR khong thay pos-app.jar. Chay: mvn -DskipTests package ^(JAR: %APP_DIR%\pos-app.jar hoac %APP_DIR%\target\pos-app.jar^))>>"%RL%"
+  (echo [%date% %time%] ERR khong thay pos-app.jar. Chay: mvn -DskipTests package ^(JAR: !APP_DIR!\pos-app.jar hoac !APP_DIR!\target\pos-app.jar^))>>"%RL%"
   goto :show_err
 )
 set "JFXN=0"
