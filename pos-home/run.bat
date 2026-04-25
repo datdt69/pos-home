@@ -47,8 +47,11 @@ if errorlevel 1 (
   start "" notepad "%RL%"
   exit /b 1
 )
-for %%E in ("!JAVA_CMD!") do set "JAB=%%~dpE"
-if exist "!JAB!javaw.exe" set "JAVA_CMD=!JAB!javaw.exe"
+rem mac dinh dung java.exe (stderr/exit ong dinh hon javaw tren Win7). Im lang: dat POS_USE_JAVAW=1
+if /i "%POS_USE_JAVAW%"=="1" (
+  for %%E in ("!JAVA_CMD!") do set "JAB=%%~dpE"
+  if exist "!JAB!javaw.exe" set "JAVA_CMD=!JAB!javaw.exe"
+)
 
 set "JFXP="
 for %%F in ("!JFXDIR!\javafx-*.jar") do (
@@ -79,6 +82,14 @@ if defined JAVA_HOME if exist "!JAVA_HOME!\bin\java.exe" (
   call :j11 "!JAVA_HOME!\bin\java.exe"
   if not errorlevel 1 (set "JAVA_CMD=!JAVA_HOME!\bin\java.exe" & exit /b 0)
 )
+rem uu tien: JDK sau setup (Zulu 11 x86) - same user, may 32bit
+set "_pjd=%LOCALAPPDATA%\pos-jdk"
+if exist "%_pjd%\" for /d %%D in ("%_pjd%\zulu11*") do (
+  if exist "%%~D\bin\java.exe" (
+    call :j11 "%%~D\bin\java.exe"
+    if not errorlevel 1 (set "JAVA_CMD=%%~D\bin\java.exe" & exit /b 0)
+  )
+)
 set "_jh="
 for /f "skip=1 tokens=1,2,*" %%A in ('reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v JAVA_HOME 2^>nul') do set "_jh=%%C"
 if defined _jh if exist "!_jh!\bin\java.exe" (
@@ -101,17 +112,27 @@ for /d %%D in ("C:\Program Files\Java\jdk-11*") do (
     if not errorlevel 1 (set "JAVA_CMD=%%~D\bin\java.exe" & exit /b 0)
   )
 )
-for /f "delims=" %%W in ('where java 2^>nul') do (
-  call :j11 "%%W"
-  if not errorlevel 1 (set "JAVA_CMD=%%W" & exit /b 0)
-)
-rem Zulu 11 x86 sau setup.ps1: chi co o LOCALAPPDATA, khong vao PATH may
-set "_pjd=%LOCALAPPDATA%\pos-jdk"
-if exist "%_pjd%\" for /d %%D in ("%_pjd%\zulu11*") do (
+for /d %%D in ("C:\Program Files\Eclipse Adoptium\*") do (
   if exist "%%~D\bin\java.exe" (
     call :j11 "%%~D\bin\java.exe"
     if not errorlevel 1 (set "JAVA_CMD=%%~D\bin\java.exe" & exit /b 0)
   )
+)
+if exist "C:\Program Files (x86)\Eclipse Adoptium\" for /d %%D in ("C:\Program Files (x86)\Eclipse Adoptium\*") do (
+  if exist "%%~D\bin\java.exe" (
+    call :j11 "%%~D\bin\java.exe"
+    if not errorlevel 1 (set "JAVA_CMD=%%~D\bin\java.exe" & exit /b 0)
+  )
+)
+for /d %%D in ("C:\Program Files (x86)\Java\jdk-11*") do (
+  if exist "%%~D\bin\java.exe" (
+    call :j11 "%%~D\bin\java.exe"
+    if not errorlevel 1 (set "JAVA_CMD=%%~D\bin\java.exe" & exit /b 0)
+  )
+)
+for /f "delims=" %%W in ('where java 2^>nul') do (
+  call :j11 "%%W"
+  if not errorlevel 1 (set "JAVA_CMD=%%W" & exit /b 0)
 )
 exit /b 1
 
@@ -132,8 +153,8 @@ del /f /q "%JVT%" 2>nul
 exit /b 1
 
 :log_fail
-if exist "%ERRF%" (
-  (echo [%date% %time%] JAR exit !EXITCODE!:)>>"%RL%"
-  type "%ERRF%" 1>>"%RL%" 2>nul
-)
+(echo [%date% %time%] JAR exit !EXITCODE! JAVA_CMD=!JAVA_CMD!)>>"%RL%"
+if exist "%ERRF%" (type "%ERRF%" 1>>"%RL%" 2>nul) else (echo [stderr file missing])>>"%RL%"
+echo --- java -version: >>"%RL%"
+"%JAVA_CMD%" -version 1>>"%RL%" 2>&1
 exit /b 0
