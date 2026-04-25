@@ -30,18 +30,21 @@ cd /d "%APP_DIR%" 2>nul
 (echo [%date% %time%] run.bat APP_DIR=%APP_DIR%)>>"%RL%"
 if not exist "%JAR%" (
   (echo [%date% %time%] ERR khong thay pos-app.jar. Chay: mvn -DskipTests package ^(JAR: %APP_DIR%\pos-app.jar hoac %APP_DIR%\target\pos-app.jar^))>>"%RL%"
+  start "" notepad "%RL%"
   exit /b 1
 )
 set "JFXN=0"
 for %%F in ("!JFXDIR!\javafx-*.jar") do set /a JFXN+=1
 if !JFXN! lss 1 (
   (echo [%date% %time%] ERR no javafx-*.jar in !JFXDIR!\)>>"%RL%"
+  start "" notepad "%RL%"
   exit /b 1
 )
 
 call :find_java11
 if errorlevel 1 (
-  (echo [%date% %time%] ERR need Java 11, set JAVA_HOME)>>"%RL%"
+  (echo [%date% %time%] ERR need Java 11+. Cai JDK hoac dung thu muc Zulu: %LOCALAPPDATA%\pos-jdk\zulu11*  ; hoac set JAVA_HOME)>>"%RL%"
+  start "" notepad "%RL%"
   exit /b 1
 )
 for %%E in ("!JAVA_CMD!") do set "JAB=%%~dpE"
@@ -59,9 +62,14 @@ set "JVM_JFX=--add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-open
 if /i "%POS_THEME%"=="light" set "POS_EXTRA=-Dpos.theme=light"
 
 del "%ERRF%" 2>nul
-"%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main 1>nul 2>"%ERRF%"
+if /i "%POS_DEBUG%"=="1" (
+  "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
+) else (
+  "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main 1>nul 2>"%ERRF%"
+)
 set "EXITCODE=%ERRORLEVEL%"
 if not "%EXITCODE%"=="0" call :log_fail
+if not "%EXITCODE%"=="0" if exist "%RL%" start "" notepad "%RL%"
 del "%ERRF%" 2>nul
 endlocal & exit /b %EXITCODE%
 
@@ -97,18 +105,31 @@ for /f "delims=" %%W in ('where java 2^>nul') do (
   call :j11 "%%W"
   if not errorlevel 1 (set "JAVA_CMD=%%W" & exit /b 0)
 )
+rem Zulu 11 x86 sau setup.ps1: chi co o LOCALAPPDATA, khong vao PATH may
+set "_pjd=%LOCALAPPDATA%\pos-jdk"
+if exist "%_pjd%\" for /d %%D in ("%_pjd%\zulu11*") do (
+  if exist "%%~D\bin\java.exe" (
+    call :j11 "%%~D\bin\java.exe"
+    if not errorlevel 1 (set "JAVA_CMD=%%~D\bin\java.exe" & exit /b 0)
+  )
+)
 exit /b 1
 
+rem Chap nhan JDK 11+ (11.0 ... 25.x trong nho -version)
 :j11
 set "_jx=%~1"
 if not exist "%_jx%" exit /b 1
 set "JVT=%TEMP%\pos_rjver.txt"
 "%_jx%" -version 1>"%JVT%" 2>&1
-rem JDK 11 in -version: co chuoi "11.0." hoac " 11.0"
-findstr "11.0" "%JVT%" >nul
-set "JE=!errorlevel!"
+for %%P in (11.0 12.0 13.0 14.0 15.0 16.0 17.0 18.0 19.0 20.0 21.0 22.0 23.0 24.0 25.0) do (
+  findstr "%%P" "%JVT%" >nul 2>&1
+  if not errorlevel 1 (
+    del /f /q "%JVT%" 2>nul
+    exit /b 0
+  )
+)
 del /f /q "%JVT%" 2>nul
-if "!JE!"=="0" (exit /b 0) else (exit /b 1)
+exit /b 1
 
 :log_fail
 if exist "%ERRF%" (

@@ -30,3 +30,8 @@
 [Fri 04/24/2026 21:48:59.46] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
 [Fri 04/24/2026 22:16:06.53] run.bat: dung target\pos-app.jar va target\jfx
 [Fri 04/24/2026 22:16:06.53] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
+[Sat 04/25/2026 17:40:01.25] run.bat: dung target\pos-app.jar va target\jfx
+[Sat 04/25/2026 17:40:01.26] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
+[Sat 04/25/2026 17:40:01.94] ERR need Java 11, set JAVA_HOME
+[Sat 04/25/2026 17:41:43.41] run.bat: dung target\pos-app.jar va target\jfx
+[Sat 04/25/2026 17:41:43.42] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home

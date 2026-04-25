@@ -410,6 +410,14 @@ if ($ver -ge $MinJdk) {
   Write-Host ("OK: Java {0} san sang ({1})" -f $ver2, $jPath2) -ForegroundColor Green
 }
 
+# Luu JAVA_HOME (User) de cua so CMD moi, shortcut, run.bat nhanh duoc
+if ($env:JAVA_HOME) {
+  $jhu = $env:JAVA_HOME.Trim()
+  if (Test-Path (Join-Path $jhu "bin\java.exe")) {
+    [Environment]::SetEnvironmentVariable("JAVA_HOME", $jhu, "User")
+  }
+}
+
 # --- mvn: profile may 32-bit (OpenJFX win-x86) ---
 $mvnArgs = @("-DskipTests", "package")
 if (Test-Is32BitWindows) {
