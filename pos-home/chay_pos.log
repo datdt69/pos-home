@@ -98,3 +98,18 @@ SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
  
 [OK] ung dung thoat @ Sat 04/25/2026 18:24:48.64 ma 0
+[Sat 04/25/2026 18:42:45.74] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | JAR+jfx+lib: target\ (sau mvn package)
+ 
+=== JVM chay @ Sat 04/25/2026 18:42:46.24 === 
+JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
+=== 
+[run.bat: den day = da tim duoc java; doan duoi: output JVM (loi, SLF4J...) hoac rong] 
+[run.bat: cua so cmd tat nhanh - dung run_debug.bat hoac: set POS_DEBUG=1] 
+
+[run.bat: dang goi com.pos.Main, ghi vao chay_pos.log] 
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+ 
+[OK] ung dung thoat @ Sat 04/25/2026 18:42:51.76 ma 0
+ [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_debug.bat hoac bam dup run.bat voi set POS_DEBUG=1]

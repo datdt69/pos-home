@@ -11,6 +11,9 @@ set "LAST=%APP_DIR:~-1%"
 if "!LAST!"=="\" set "APP_DIR=%APP_DIR:~0,-1%"
 
 set "RL=%APP_DIR%\chay_pos.log"
+rem Win7 / USB / quyen: chay_pos.log o thu muc du an that bai. Luon ghi them ban %TMP% de van co log.
+set "RL7=%TMP%\chay_pos_may7.log"
+(echo [boot] %date% %time% APP=!APP_DIR! ^| RL may chu pos + RL7=Temp) >> "%RL7%" 2>&1
 
 set "JAR=%APP_DIR%\pos-app.jar"
 set "JFXDIR=%APP_DIR%\jfx"
@@ -162,6 +165,17 @@ if /i "%POS_KEEP_OPEN%"=="1" (
   )
 )
 
+rem Ban may 7/ POS: gop vao file Temp (khi o thu muc du an ghi that bai)
+if defined RL7 (
+  (echo. & echo [--- gop chay_pos.log vao file Temp ben duoi ---] & echo.)>>"%RL7%" 2>&1
+)
+if exist "%RL%" (
+  type "%RL%" >> "%RL7%" 2>&1
+) else (
+  if defined RL7 (echo [chay_pos: khong ghi duoc o thu muc du an, chi co boot o Temp])>>"%RL7%" 2>&1
+)
+if not "%EXITCODE%"=="0" if defined RL7 if exist "%RL7%" if /i not "%POS_NO_NOTEPAD7%"=="1" start "" notepad "%RL7%"
+
 endlocal & exit /b %EXITCODE%
 
 :find_java11
@@ -249,10 +263,19 @@ if defined JAVA_CMD (
 exit /b 0
 
 :show_err
-if exist "%RL%" start "" notepad "%RL%"
+if defined RL7 (
+  if exist "%RL%" (
+    type "%RL%" >> "%RL7%" 2>&1
+  ) else (
+    echo [show_err: khong ghi duoc chay_pos.log o du an]>>"%RL7%" 2>&1
+  )
+)
+if defined RL7 if exist "%RL7%" if /i not "%POS_NO_NOTEPAD7%"=="1" start "" notepad "%RL7%"
+if exist "%RL%" if /i not "%POS_NO_NOTEPAD7%"=="1" start "" notepad "%RL%"
 if /i not "%POS_NO_PAUSE%"=="1" (
   echo.
-  echo Loi! Mo chay_pos.log: %RL%
+  echo Loi! Log du an: %RL%
+  echo Log Temp may Win7/ POS: %RL7%
   echo.
   pause
 )
