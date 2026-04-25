@@ -59,6 +59,8 @@ if errorlevel 1 (
 rem May 32-bit: JAR javafx phai *-win-x86*. (ban *-win.jar* la 64 bit). Cache .openjfx cu 64 -> UnsatisfiedLinkError AMD64 on IA32
 set "J32="
 "%JAVA_CMD%" -XshowSettings:properties 2>nul | findstr /c:"sun.arch.data.model = 32" >nul && set "J32=1"
+rem findstr: khong thay "32" tren JVM 64 -> errorlevel=1, lam EXITCODE=1 sau khi java OK. Reset:
+ver >nul
 if defined J32 (
   set "HASW86=0"
   for %%F in ("!JFXDIR!\javafx-*-win-x86*.jar") do set "HASW86=1"
@@ -96,18 +98,22 @@ set "JVM_JFX=--add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-open
 if /i "%POS_THEME%"=="light" set "POS_EXTRA=-Dpos.theme=light"
 
 rem Ghi toan bo loi JVM vao chay_pos.log (1>nul truoc day lam POS khong biet li do)
+ver >nul
 (echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo.)>>"%RL%"
 
-if /i "%POS_DEBUG%"=="1" if "!JAVW!"=="1" (
-  (echo [POS_DEBUG+JAVAW: start /wait javaw] )>>"%RL%"
-  start "POS" /wait "!JAVA_CMD!" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
-) else if /i "%POS_DEBUG%"=="1" (
-  (echo [POS_DEBUG=1: ra console, khong ghi vao chay_pos.log] )>>"%RL%"
-  "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
+rem Phai long if (POS_DEBUG) roi else (ghi log). CMD: if A if B (x) else (y) — neu A false thi Y khong chay, java co the khong bao gio chay, ma 0 gia!
+if /i "%POS_DEBUG%"=="1" (
+  if "!JAVW!"=="1" (
+    (echo [POS_DEBUG+JAVAW: start /wait javaw] )>>"%RL%"
+    start "POS" /wait "!JAVA_CMD!" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
+  ) else (
+    (echo [POS_DEBUG=1: ra console, khong ghi vao chay_pos.log] )>>"%RL%"
+    "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
+  )
 ) else (
   "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main 1>>"%RL%" 2>&1
 )
-set "EXITCODE=%ERRORLEVEL%"
+set "EXITCODE=!ERRORLEVEL!"
 if not "%EXITCODE%"=="0" call :log_fail
 if not "%EXITCODE%"=="0" if exist "%RL%" start "" notepad "%RL%"
 if not "%EXITCODE%"=="0" if /i not "%POS_NO_PAUSE%"=="1" (
