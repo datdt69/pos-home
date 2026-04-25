@@ -72,6 +72,14 @@ set "J32="
 rem findstr: khong thay "32" tren JVM 64 -> errorlevel=1, lam EXITCODE=1 sau khi java OK. Reset:
 ver >nul
 if defined J32 (
+  call :find_java11_x64
+  if not errorlevel 1 (
+    set "JAVA_CMD=!JAVA64_CMD!"
+    set "J32="
+    (echo [%date% %time%] Tim thay Java 64-bit, uu tien dung: !JAVA_CMD!)>>"%RL%"
+  )
+)
+if defined J32 (
   if not exist "!JFXDIR!\javafx-*-win-x86*.jar" (
     (echo [%date% %time%] ERR Java 32-bit ma jfx khong *-win-x86*. Cai: mvnw clean -Ppos32 -DskipTests package, lay target\jfx)>>"%RL%"
     (echo. Neu tren may 64-bit: dung JDK 64, build KHONG -Ppos32. )>>"%RL%"
@@ -265,6 +273,35 @@ for /f "delims=" %%W in ('where java 2^>nul') do (
 )
 exit /b 1
 
+:find_java11_x64
+set "JAVA64_CMD="
+for /d %%D in ("C:\Program Files\Eclipse Adoptium\*") do (
+  if exist "%%~D\bin\java.exe" (
+    call :j11 "%%~D\bin\java.exe"
+    if not errorlevel 1 (
+      call :is64 "%%~D\bin\java.exe"
+      if not errorlevel 1 (set "JAVA64_CMD=%%~D\bin\java.exe" & exit /b 0)
+    )
+  )
+)
+for /d %%D in ("C:\Program Files\Java\jdk-11*") do (
+  if exist "%%~D\bin\java.exe" (
+    call :j11 "%%~D\bin\java.exe"
+    if not errorlevel 1 (
+      call :is64 "%%~D\bin\java.exe"
+      if not errorlevel 1 (set "JAVA64_CMD=%%~D\bin\java.exe" & exit /b 0)
+    )
+  )
+)
+for /f "delims=" %%W in ('where java 2^>nul') do (
+  call :j11 "%%W"
+  if not errorlevel 1 (
+    call :is64 "%%W"
+    if not errorlevel 1 (set "JAVA64_CMD=%%W" & exit /b 0)
+  )
+)
+exit /b 1
+
 rem Chap nhan JDK 11+ (11.0 ... 25.x trong nho -version)
 :j11
 set "_jx=%~1"
@@ -280,6 +317,15 @@ for %%P in (11.0 12.0 13.0 14.0 15.0 16.0 17.0 18.0 19.0 20.0 21.0 22.0 23.0 24.
 )
 del /f /q "%JVT%" 2>nul
 exit /b 1
+
+:is64
+set "_j64=%~1"
+if not exist "%_j64%" exit /b 1
+"%_j64%" -XshowSettings:properties -version 1>nul 2>"%TEMP%\pos_j64_check.txt"
+findstr /c:"sun.arch.data.model = 64" "%TEMP%\pos_j64_check.txt" >nul 2>&1
+set "_EL=%ERRORLEVEL%"
+del /f /q "%TEMP%\pos_j64_check.txt" 2>nul
+exit /b %_EL%
 
 :log_fail
 rem Phan "phien ban JDK" o duoi CHI la thong tin them, KHONG phai dong loi. Loi that = doan ngan/ Exception o tren trong file nay.

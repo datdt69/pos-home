@@ -1,8 +1,8 @@
-[boot] Sat 04/25/2026 19:12:49.58 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat moi
-[Sat 04/25/2026 19:12:49.59] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | JAR+jfx+lib: target\ (sau mvn package)
+[boot] Sat 04/25/2026 19:16:47.79 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat moi
+[Sat 04/25/2026 19:16:47.80] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | JAR+jfx+lib: target\ (sau mvn package)
 [JFX module-path] C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-base-17.0.6-win.jar;C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-base-17.0.6.jar;C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-controls-17.0.6-win.jar;C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-controls-17.0.6.jar;C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-fxml-17.0.6-win.jar;C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-graphics-17.0.6-win.jar;C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx\javafx-graphics-17.0.6.jar
  
-=== JVM chay @ Sat 04/25/2026 19:12:50.29 === 
+=== JVM chay @ Sat 04/25/2026 19:16:48.47 === 
 JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
 === 
 [run.bat: den day = da tim duoc java; doan duoi: output JVM (loi, SLF4J...) hoac rong] 
@@ -13,5 +13,5 @@ SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
  
-[OK] ung dung thoat @ Sat 04/25/2026 19:12:56.66 ma 0
+[OK] ung dung thoat @ Sat 04/25/2026 19:16:55.46 ma 0
  [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_win7_pos.bat hoac bam dup run.bat voi set POS_DEBUG=1]
