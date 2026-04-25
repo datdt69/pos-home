@@ -1,16 +1,16 @@
-[boot] Sat 04/25/2026 18:55:55.29 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat moi
-[Sat 04/25/2026 18:55:55.30] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | JAR+jfx+lib: target\ (sau mvn package)
+[boot] Sat 04/25/2026 19:05:18.82 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat moi
+[Sat 04/25/2026 19:05:18.83] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | JAR+jfx+lib: target\ (sau mvn package)
  
-=== JVM chay @ Sat 04/25/2026 18:55:55.83 === 
+=== JVM chay @ Sat 04/25/2026 19:05:19.41 === 
 JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
 === 
 [run.bat: den day = da tim duoc java; doan duoi: output JVM (loi, SLF4J...) hoac rong] 
-[run.bat: cua so cmd tat nhanh - dung run_debug.bat hoac: set POS_DEBUG=1] 
+[run.bat: cua so cmd tat nhanh - dung run_win7_pos.bat hoac: set POS_DEBUG=1] 
 
-[POS_DEBUG=1: in ra console VA ghi vao chay_pos.log] 
+[run.bat: dang goi com.pos.Main, ghi vao chay_pos.log] 
 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
  
-[OK] ung dung thoat @ Sat 04/25/2026 18:56:01.47 ma 0
+[OK] ung dung thoat @ Sat 04/25/2026 19:05:25.26 ma 0
  [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_win7_pos.bat hoac bam dup run.bat voi set POS_DEBUG=1]

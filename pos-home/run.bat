@@ -79,7 +79,8 @@ if defined J32 (
     (echo. Neu tren may 64-bit: dung JDK 64, build KHONG -Ppos32. )>>"%RL%"
     goto :show_err
   )
-  (echo. May 32: loi native 64 tren JVM 32 - xoa: %USERPROFILE%\.openjfx\cache hoac set POS_OPENJFX_CACHE_CLEAR=1 roi run) >> "%RL%"
+  if not defined POS_OPENJFX_CACHE_CLEAR set "POS_OPENJFX_CACHE_CLEAR=1"
+  (echo. May 32: dang ep JavaFX x86 + xoa cache OpenJFX de tranh nap nham DLL 64-bit) >> "%RL%"
   if /i "%POS_OPENJFX_CACHE_CLEAR%"=="1" if exist "%USERPROFILE%\.openjfx\cache" (
     (echo [%date% %time%] POS_OPENJFX_CACHE_CLEAR=1: xoa .openjfx\cache) >> "%RL%"
     rd /s /q "%USERPROFILE%\.openjfx\cache" 2>nul
@@ -97,8 +98,19 @@ if /i not "%POS_DEBUG%"=="1" (
 )
 
 set "JFXP="
-for %%F in ("!JFXDIR!\javafx-*.jar") do (
-  if defined JFXP (set "JFXP=!JFXP!;%%F") else (set "JFXP=%%F")
+if defined J32 (
+  for %%F in ("!JFXDIR!\javafx-*-win-x86*.jar") do (
+    if defined JFXP (set "JFXP=!JFXP!;%%F") else (set "JFXP=%%F")
+  )
+) else (
+  for %%F in ("!JFXDIR!\javafx-*-win.jar") do (
+    if defined JFXP (set "JFXP=!JFXP!;%%F") else (set "JFXP=%%F")
+  )
+)
+if not defined JFXP (
+  for %%F in ("!JFXDIR!\javafx-*.jar") do (
+    if defined JFXP (set "JFXP=!JFXP!;%%F") else (set "JFXP=%%F")
+  )
 )
 set "CP=%JAR%"
 if exist "!LIBDIR!" (
