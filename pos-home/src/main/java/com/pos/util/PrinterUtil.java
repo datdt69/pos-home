@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,7 +50,10 @@ public final class PrinterUtil {
       if (ports == null || ports.length == 0) {
          return Collections.emptyList();
       }
-      return Stream.of(ports).map(SerialPort::getSystemPortName).collect(Collectors.toList());
+      return Stream.of(ports)
+         .sorted(Comparator.comparingInt(PrinterUtil::portScore).reversed())
+         .map(SerialPort::getSystemPortName)
+         .collect(Collectors.toList());
    }
 
    public static String detectPrinterPort() {
@@ -71,7 +75,8 @@ public final class PrinterUtil {
 
    private static boolean testPortWithBaud(String systemPortName, int baud) {
       try {
-         writeToPort(systemPortName, new byte[]{0x1B, 0x40}, TIMEOUT_MS, baud);
+         // init + 1 line de tranh truong hop ghi "ao" vao cong khong phai may in
+         writeToPort(systemPortName, new byte[]{0x1B, 0x40, 0x0A}, TIMEOUT_MS, baud);
          return true;
       } catch (Exception e) {
          return false;
@@ -333,24 +338,56 @@ public final class PrinterUtil {
       p.setNumDataBits(8);
       p.setNumStopBits(SerialPort.ONE_STOP_BIT);
       p.setParity(SerialPort.NO_PARITY);
-      p.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, timeoutMs);
+      p.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, timeoutMs);
       if (!p.openPort(timeoutMs)) {
          throw new IOException("Không mở được cổng: " + systemPortName);
       }
       try {
-         p.setDTR();
-         p.setRTS();
+         p.clearRTS();
+         p.clearDTR();
          try {
-            Thread.sleep(20L);
+            Thread.sleep(10L);
          } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
          }
-         int w = p.writeBytes(data, data.length);
-         if (w < 0) {
+         p.setDTR();
+         p.setRTS();
+         try {
+            Thread.sleep(50L);
+         } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+         }
+         p.flushIOBuffers();
+         int off = 0;
+         while (off < data.length) {
+            int w = p.writeBytes(data, data.length - off, off);
+            if (w <= 0) {
+               throw new IOException("Ghi cổng thất bại: " + systemPortName);
+            }
+            off += w;
+         }
+         if (off < data.length) {
             throw new IOException("Ghi cổng thất bại: " + systemPortName);
+         }
+         p.flushIOBuffers();
+         try {
+            Thread.sleep(80L);
+         } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
          }
       } finally {
          p.closePort();
       }
+   }
+
+   private static int portScore(SerialPort p) {
+      String n = (p.getSystemPortName() + " " + p.getDescriptivePortName() + " " + p.getPortDescription()).toLowerCase(Locale.ROOT);
+      int s = 0;
+      if (n.contains("usb")) s += 5;
+      if (n.contains("serial")) s += 4;
+      if (n.contains("ch340") || n.contains("cp210") || n.contains("ftdi") || n.contains("prolific")) s += 6;
+      if (n.contains("printer") || n.contains("pos")) s += 3;
+      if (n.startsWith("com1") || n.startsWith("com2")) s -= 2;
+      return s;
    }
 }
