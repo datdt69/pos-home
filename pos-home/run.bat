@@ -39,7 +39,7 @@ if !JFXN! lss 1 (
 )
 rem Java 11: chi chay jfx 17.0.6. target\jfx con ban 20+ = loi 61.0: xoa jfx, mvnw clean -Ppos32 package
 if exist "!JFXDIR!\javafx-base-2*.jar" (
-  (echo [%date% %time%] ERR jfx 20+ ^(ten jar javafx-base-21...^) — Java 11 khong doc duoc. Xoa target\jfx, build: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
+  (echo [%date% %time%] ERR jfx 20+ ^(ten jar javafx-base-21^) - Java 11 khong doc duoc. Xoa target\jfx, build: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
   goto :show_err
 )
 if exist "!JFXDIR!\javafx-base-19*.jar" (
@@ -73,10 +73,15 @@ if defined J32 (
     rd /s /q "%USERPROFILE%\.openjfx\cache" 2>nul
   )
 )
-rem mac dinh dung java.exe (stderr/exit ong dinh hon javaw tren Win7). Im lang: dat POS_USE_JAVAW=1
-if /i "%POS_USE_JAVAW%"=="1" (
-  for %%E in ("!JAVA_CMD!") do set "JAB=%%~dpE"
-  if exist "!JAB!javaw.exe" set "JAVA_CMD=!JAB!javaw.exe"
+rem Chay: luon dung java.exe (doi toi khi app tat + ghi log dung). javaw: khong block -> cmd tat ngay.
+rem Chi POS_DEBUG=1 + POS_USE_JAVAW=1: dung javaw + start /wait
+set "JAVW=0"
+for %%E in ("!JAVA_CMD!") do set "JAB=%%~dpE"
+if /i not "%POS_DEBUG%"=="1" (
+  if exist "!JAB!java.exe" set "JAVA_CMD=!JAB!java.exe"
+) else if /i "%POS_USE_JAVAW%"=="1" if exist "!JAB!javaw.exe" (
+  set "JAVA_CMD=!JAB!javaw.exe"
+  set "JAVW=1"
 )
 
 set "JFXP="
@@ -93,7 +98,10 @@ if /i "%POS_THEME%"=="light" set "POS_EXTRA=-Dpos.theme=light"
 rem Ghi toan bo loi JVM vao chay_pos.log (1>nul truoc day lam POS khong biet li do)
 (echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo.)>>"%RL%"
 
-if /i "%POS_DEBUG%"=="1" (
+if /i "%POS_DEBUG%"=="1" if "!JAVW!"=="1" (
+  (echo [POS_DEBUG+JAVAW: start /wait javaw] )>>"%RL%"
+  start "POS" /wait "!JAVA_CMD!" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
+) else if /i "%POS_DEBUG%"=="1" (
   (echo [POS_DEBUG=1: ra console, khong ghi vao chay_pos.log] )>>"%RL%"
   "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
 ) else (
