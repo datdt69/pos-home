@@ -37,6 +37,19 @@ if !JFXN! lss 1 (
   (echo [%date% %time%] ERR no javafx-*.jar in !JFXDIR!\)>>"%RL%"
   goto :show_err
 )
+rem Java 11: chi chay jfx 17.0.6. target\jfx con ban 20+ = loi 61.0: xoa jfx, mvnw clean -Ppos32 package
+if exist "!JFXDIR!\javafx-base-2*.jar" (
+  (echo [%date% %time%] ERR jfx 20+ ^(ten jar javafx-base-21...^) — Java 11 khong doc duoc. Xoa target\jfx, build: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
+  goto :show_err
+)
+if exist "!JFXDIR!\javafx-base-19*.jar" (
+  (echo [%date% %time%] ERR jfx 19 can Java 15+. Dung 17.0.6, build: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
+  goto :show_err
+)
+if exist "!JFXDIR!\javafx-base-18*.jar" (
+  (echo [%date% %time%] ERR jfx 18+ can Java 16+. Dung 17.0.6, build: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
+  goto :show_err
+)
 
 call :find_java11
 if errorlevel 1 (

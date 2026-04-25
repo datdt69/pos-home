@@ -426,14 +426,35 @@ if (Test-Is32BitWindows) {
   Write-Host "Build: profile pos32 (JavaFX nen Windows 32-bit)..." -ForegroundColor DarkCyan
 }
 
+# jfx 18+ / 2x can Java 16+; may Java 11 + Zulu 11: phai jfx 17.0.6. Zip cu co target\jfx\javafx-base-21... => clean package
+$jfxDir = Join-Path $Root "target\jfx"
+$staleJfx = $false
+if (Test-Path $jfxDir) {
+  foreach ($pat in @("javafx-base-2*.jar", "javafx-base-18*.jar", "javafx-base-19*.jar")) {
+    if (Get-ChildItem -Path $jfxDir -Filter $pat -ErrorAction SilentlyContinue | Select-Object -First 1) {
+      $staleJfx = $true
+      break
+    }
+  }
+}
+if ($staleJfx) {
+  if (Test-Is32BitWindows) {
+    $mvnArgs = @("-Ppos32", "clean", "-DskipTests", "package")
+  } else {
+    $mvnArgs = @("clean", "-DskipTests", "package")
+  }
+  Write-Host ""
+  Write-Host "Phat hien jfx cu 18+ / 2x (Java 11 chay loi 61.0). Chay: mvnw $($mvnArgs -join ' ')" -ForegroundColor Yellow
+}
+
 # --- build ---
 $Mvnw = Join-Path $Root "mvnw.cmd"
 if (-not (Test-Path $Mvnw)) { throw "Khong tim thay mvnw.cmd. Thu muc giai nen co bi thieu file khong?" }
 
 $prebuilt = Join-Path $Root "target\pos-app.jar"
-if (Test-Path $prebuilt) {
+if ((Test-Path $prebuilt) -and -not $staleJfx) {
   Write-Host ""
-  Write-Host 'Da co target\pos-app.jar: bo qua mvn package. Xoa JAR do neu can build lai.' -ForegroundColor Yellow
+  Write-Host 'Da co target\pos-app.jar (jfx ~17.0.6): bo qua mvn package. Xoa target\ neu can build sach lai.' -ForegroundColor Yellow
 } else {
   Write-Host ""
   Write-Host "Dang chay: mvnw $($mvnArgs -join ' ') (lan dau se tai Maven, can mang)..." -ForegroundColor Cyan
