@@ -72,9 +72,7 @@ set "J32="
 rem findstr: khong thay "32" tren JVM 64 -> errorlevel=1, lam EXITCODE=1 sau khi java OK. Reset:
 ver >nul
 if defined J32 (
-  set "HASW86=0"
-  for %%F in ("!JFXDIR!\javafx-*-win-x86*.jar") do set "HASW86=1"
-  if "!HASW86!"=="0" (
+  if not exist "!JFXDIR!\javafx-*-win-x86*.jar" (
     (echo [%date% %time%] ERR Java 32-bit ma jfx khong *-win-x86*. Cai: mvnw clean -Ppos32 -DskipTests package, lay target\jfx)>>"%RL%"
     (echo. Neu tren may 64-bit: dung JDK 64, build KHONG -Ppos32. )>>"%RL%"
     goto :show_err
@@ -99,17 +97,19 @@ if /i not "%POS_DEBUG%"=="1" (
 
 set "JFXP="
 if defined J32 (
-  for %%F in ("!JFXDIR!\javafx-*-win-x86*.jar") do (
-    if defined JFXP (set "JFXP=!JFXP!;%%F") else (set "JFXP=%%F")
+  for %%F in ("!JFXDIR!\javafx-*.jar") do (
+    echo %%~nxF | findstr /i /c:"-win-x86" >nul
+    if not errorlevel 1 call :add_jfx_path "%%~fF"
   )
 ) else (
-  for %%F in ("!JFXDIR!\javafx-*-win.jar") do (
-    if defined JFXP (set "JFXP=!JFXP!;%%F") else (set "JFXP=%%F")
+  for %%F in ("!JFXDIR!\javafx-*.jar") do (
+    echo %%~nxF | findstr /i /c:"-win-x86" >nul
+    if errorlevel 1 call :add_jfx_path "%%~fF"
   )
 )
 if not defined JFXP (
   for %%F in ("!JFXDIR!\javafx-*.jar") do (
-    if defined JFXP (set "JFXP=!JFXP!;%%F") else (set "JFXP=%%F")
+    call :add_jfx_path "%%~fF"
   )
 )
 set "CP=%JAR%"
@@ -192,6 +192,11 @@ if exist "%RL%" (
 if not "%EXITCODE%"=="0" if defined RL7 if exist "%RL7%" if /i not "%POS_NO_NOTEPAD7%"=="1" start "" notepad "%RL7%"
 
 endlocal & exit /b %EXITCODE%
+
+:add_jfx_path
+if not exist "%~1" exit /b 0
+if defined JFXP (set "JFXP=!JFXP!;%~1") else (set "JFXP=%~1")
+exit /b 0
 
 :find_java11
 set "JAVA_CMD="
