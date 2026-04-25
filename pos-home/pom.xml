@@ -10,12 +10,24 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>11</maven.compiler.release>
-        <javafx.version>11.0.2</javafx.version>
+        <javafx.version>17.0.6</javafx.version>
         <!-- win = Windows 64-bit; may Windows 7/10 32-bit: -Ppos32 (win-x86) -->
         <javafx.platform>win</javafx.platform>
         <sqlite.version>3.45.1.0</sqlite.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -83,6 +95,8 @@
                         </goals>
                         <configuration>
                             <includeGroupIds>org.openjfx</includeGroupIds>
+                            <includeArtifactIds>javafx-base,javafx-graphics,javafx-controls,javafx-fxml</includeArtifactIds>
+                            <includeClassifiers>${javafx.platform}</includeClassifiers>
                             <outputDirectory>${project.build.directory}/jfx</outputDirectory>
                             <overWriteReleases>true</overWriteReleases>
                         </configuration>

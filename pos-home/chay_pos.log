@@ -1,13 +1,15 @@
-[boot] Sat 04/25/2026 19:23:03.61 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat win7-32
-[Sat 04/25/2026 19:23:03.62] ERR phat hien JavaFX 64-bit (*-win.jar) trong C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\target\jfx.
-Xoa jfx cu, build lai: mvnw clean -Ppos32 -DskipTests package
-Danh sach jar:
-javafx-base-17.0.6-win.jar
-javafx-base-17.0.6.jar
-javafx-controls-17.0.6-win-x86.jar
-javafx-controls-17.0.6-win.jar
-javafx-controls-17.0.6.jar
-javafx-fxml-17.0.6-win-x86.jar
-javafx-fxml-17.0.6-win.jar
-javafx-graphics-17.0.6-win.jar
-javafx-graphics-17.0.6.jar
+[boot] Sat 04/25/2026 19:34:50.78 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat win7-32
+[Sat 04/25/2026 19:34:52.04] Auto-setup: chay setup.ps1 de cai Java x86...
+OK: Phat hien Java 21 (C:\Program Files\Common Files\Oracle\Java\javapath\java.exe) - dung, bo qua cai JDK.
+
+Da co target\pos-app.jar (jfx ~17.0.6): bo qua mvn package. Xoa target\ neu can build sach lai.
+
+=== XONG ===
+  Shortcut: C:\Users\datdt\OneDrive\Máy tính\POS nha.lnk
+  (May 32-bit: da build voi -Ppos32; can JDK 11 x86, run.bat dung JAR + JavaFX 32)
+  (Loi 'AMD 64-bit .dll on IA 32' khi chay: xoa thu muc .openjfx\cache dung cua user; hoac: $env:POS_OPENJFX_CACHE_CLEAR='1'; .\run.bat 1 lan)
+  Ghi chu: file zip tu may khac - chuot phai > Properties > Unblock neu Windows chan.
+  Vao Desktop, bam dup "POS nha".
+
+[Sat 04/25/2026 19:34:52.04] ERR khong tim thay Java 11+ x86.
+Can JDK/JRE 11 x86. Da thu auto setup nhung chua xong.

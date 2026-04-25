@@ -14,39 +14,58 @@ if exist "%RL%" del /q "%RL%" 2>nul
 set "JAR=%APP_DIR%\pos-app.jar"
 set "JFXDIR=%APP_DIR%\jfx"
 set "LIBDIR=%APP_DIR%\lib"
-if not exist "%JAR%" (
-  if exist "%APP_DIR%\target\pos-app.jar" (
-    set "JAR=%APP_DIR%\target\pos-app.jar"
-    set "JFXDIR=%APP_DIR%\target\jfx"
-    set "LIBDIR=%APP_DIR%\target\lib"
-  )
-)
+set "AUTOFIX_DONE=0"
+set "AUTOSETUP_DONE=0"
+call :resolve_paths
 
+:check_bundle
 if not exist "%JAR%" (
-  (echo [%date% %time%] ERR khong thay pos-app.jar.)>>"%RL%"
-  (echo Build lai: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
-  goto :show_err
+  set "BUNDLE_ERR=missing_jar"
+  goto :need_autofix
 )
-
 if not exist "!JFXDIR!\javafx-*-win-x86*.jar" (
-  (echo [%date% %time%] ERR thieu JavaFX x86 ^(*-win-x86*.jar^) trong !JFXDIR!.)>>"%RL%"
-  (echo Build lai dung profile 32-bit: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
-  goto :show_err
+  set "BUNDLE_ERR=missing_x86_jfx"
+  goto :need_autofix
 )
-
 if exist "!JFXDIR!\javafx-*-win.jar" (
-  (echo [%date% %time%] ERR phat hien JavaFX 64-bit ^(*-win.jar^) trong !JFXDIR!.)>>"%RL%"
-  (echo Xoa jfx cu, build lai: mvnw clean -Ppos32 -DskipTests package)>>"%RL%"
-  (echo Danh sach jar:)>>"%RL%"
-  dir /b "!JFXDIR!\javafx-*.jar" >>"%RL%" 2>&1
-  goto :show_err
+  set "BUNDLE_ERR=has_win64_jfx"
+  goto :need_autofix
 )
+goto :bundle_ok
+
+:need_autofix
+if "!AUTOFIX_DONE!"=="0" (
+  set "AUTOFIX_DONE=1"
+  call :autofix_pos32_bundle
+  if errorlevel 1 goto :show_err
+  call :resolve_paths
+  goto :check_bundle
+)
+if /i "!BUNDLE_ERR!"=="missing_jar" (
+  (echo [%date% %time%] ERR khong thay pos-app.jar.)>>"%RL%"
+) else if /i "!BUNDLE_ERR!"=="missing_x86_jfx" (
+  (echo [%date% %time%] ERR thieu JavaFX x86 ^(*-win-x86*.jar^) trong !JFXDIR!.)>>"%RL%"
+) else if /i "!BUNDLE_ERR!"=="has_win64_jfx" (
+  (echo [%date% %time%] ERR phat hien JavaFX 64-bit ^(*-win.jar^) trong !JFXDIR!.)>>"%RL%"
+)
+(echo Danh sach jar trong !JFXDIR!:)>>"%RL%"
+dir /b "!JFXDIR!\javafx-*.jar" >>"%RL%" 2>&1
+goto :show_err
+
+:bundle_ok
 
 call :find_java11_x86
 if errorlevel 1 (
-  (echo [%date% %time%] ERR khong tim thay Java 11+ x86.)>>"%RL%"
-  (echo Can JDK/JRE 11 x86. Goi setup.bat de cai.)>>"%RL%"
-  goto :show_err
+  if "!AUTOSETUP_DONE!"=="0" (
+    set "AUTOSETUP_DONE=1"
+    call :auto_setup_java
+    call :find_java11_x86
+  )
+  if errorlevel 1 (
+    (echo [%date% %time%] ERR khong tim thay Java 11+ x86.)>>"%RL%"
+    (echo Can JDK/JRE 11 x86. Da thu auto setup nhung chua xong.)>>"%RL%"
+    goto :show_err
+  )
 )
 
 if exist "%USERPROFILE%\.openjfx\cache" (
@@ -95,6 +114,46 @@ endlocal & exit /b 0
 :add_jfx
 if not exist "%~1" exit /b 0
 if defined JFXP (set "JFXP=!JFXP!;%~1") else (set "JFXP=%~1")
+exit /b 0
+
+:resolve_paths
+set "JAR=%APP_DIR%\pos-app.jar"
+set "JFXDIR=%APP_DIR%\jfx"
+set "LIBDIR=%APP_DIR%\lib"
+if not exist "%JAR%" (
+  if exist "%APP_DIR%\target\pos-app.jar" (
+    set "JAR=%APP_DIR%\target\pos-app.jar"
+    set "JFXDIR=%APP_DIR%\target\jfx"
+    set "LIBDIR=%APP_DIR%\target\lib"
+  )
+)
+exit /b 0
+
+:autofix_pos32_bundle
+(echo [%date% %time%] Auto-fix: don dep va build lai bundle Win7 32-bit...)>>"%RL%"
+if exist "%APP_DIR%\target\jfx" rd /s /q "%APP_DIR%\target\jfx" 2>nul
+if exist "%APP_DIR%\jfx" rd /s /q "%APP_DIR%\jfx" 2>nul
+if exist "%USERPROFILE%\.openjfx\cache" rd /s /q "%USERPROFILE%\.openjfx\cache" 2>nul
+if exist "%USERPROFILE%\.m2\repository\org\openjfx" rd /s /q "%USERPROFILE%\.m2\repository\org\openjfx" 2>nul
+if exist "%APP_DIR%\mvnw.cmd" (
+  call "%APP_DIR%\mvnw.cmd" -U clean -Ppos32 -DskipTests package 1>>"%RL%" 2>&1
+) else (
+  call mvn -U clean -Ppos32 -DskipTests package 1>>"%RL%" 2>&1
+)
+if errorlevel 1 (
+  (echo [%date% %time%] ERR auto build pos32 that bai.)>>"%RL%"
+  exit /b 1
+)
+exit /b 0
+
+:auto_setup_java
+(echo [%date% %time%] Auto-setup: chay setup.ps1 de cai Java x86...)>>"%RL%"
+if exist "%APP_DIR%\setup.ps1" (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%APP_DIR%\setup.ps1" 1>>"%RL%" 2>&1
+) else (
+  (echo [%date% %time%] ERR khong tim thay setup.ps1.)>>"%RL%"
+  exit /b 1
+)
 exit /b 0
 
 :find_java11_x86
