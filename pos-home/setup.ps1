@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 # Cai dat 1 lan: JDK 11 (Zulu 32-bit neu may 32bit; Temurin 11 neu winget), build mvnw -Ppos32 khi can, shortcut Desktop.
 # Chay: chuot phai > Run with PowerShell, hoac go setup.bat / CAI_1_LAN_POS.bat
 $ErrorActionPreference = "Stop"
@@ -38,7 +38,7 @@ function Get-JavaMajorFromExe {
     } catch { }
   }
   if ($s -match 'version "1\.(\d+)"') { return [int]$Matches[1] }
-  if ($s -match 'version "(\d+)') { return [int]$Matches[1] }  # 11.0.25 -> nhom dau: 11
+  if ($s -match 'version "(\d+)') { return [int]$Matches[1] }
   if ($s -match 'openjdk version "(\d+)') { return [int]$Matches[1] }
   return 0
 }
@@ -207,6 +207,40 @@ THU CONG (Windows 64-bit):
 "@
 }
 
+# Win7/PS3: no Expand-Archive; use Shell.Application or .NET
+function Invoke-PosExpandZip {
+  param(
+    [Parameter(Mandatory = $true)][string]$Zip,
+    [Parameter(Mandatory = $true)][string]$Dest
+  )
+  if (-not (Test-Path -LiteralPath $Dest)) { New-Item -ItemType Directory -Force -Path $Dest | Out-Null }
+  if (Get-Command Expand-Archive -ErrorAction SilentlyContinue) {
+    Expand-Archive -LiteralPath $Zip -DestinationPath $Dest -Force
+    return
+  }
+  $zipP = (Resolve-Path -LiteralPath $Zip -ErrorAction Stop).Path
+  $destP = (Resolve-Path -LiteralPath $Dest -ErrorAction Stop).Path
+  try {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $tmp = Join-Path $env:TEMP "pos-jdk-extract"
+    if (Test-Path -LiteralPath $tmp) { Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue }
+    New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($zipP, $tmp)
+    Get-ChildItem -Path $tmp -ErrorAction SilentlyContinue | ForEach-Object {
+      $t = Join-Path $destP $_.Name
+      if (Test-Path -LiteralPath $t) { Remove-Item -LiteralPath $t -Recurse -Force -ErrorAction SilentlyContinue }
+      Move-Item -LiteralPath $_.FullName -Destination $destP -Force
+    }
+    Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue
+    return
+  } catch { }
+  $shell = New-Object -ComObject Shell.Application
+  $z = $shell.Namespace($zipP)
+  $d = $shell.Namespace($destP)
+  $d.CopyHere($z.Items(), 0x10)
+  Start-Sleep -Seconds 2
+}
+
 function Test-IsZipFile {
   param([string]$FilePath)
   if (-not (Test-Path -LiteralPath $FilePath)) { return $false }
@@ -256,13 +290,13 @@ function InstallZulu11x86FromUrl {
   $len = (Get-Item -LiteralPath $zip).Length
   $minB = 25 * 1024 * 1024
   if ($len -lt $minB) {
-    throw "File tai ve chi $len B (qua nho, thuong la loi/chan — khong dung). Xoa: $zip`nTai: $Zulu11WinX86Url bang trinh duyet, dat zip vao $base, giai nen (thu muc goc: zulu11...)"
+    throw "File tai ve chi $len B (qua nho, thuong la loi/chan, khong dung). Xoa: $zip`nTai: $Zulu11WinX86Url bang trinh duyet, dat zip vao $base, giai nen (thu muc goc: zulu11...)"
   }
   if (-not (Test-IsZipFile -FilePath $zip)) {
-    throw "File $zip khong phai zip (thuong la HTML/loi 403). Xoa no. Tai: $Zulu11WinX86Url — dat file zip vung $base, chay lai (hoac giai nen thu cong vao $base). "
+    throw "File $zip khong phai zip (thuong la HTML/loi 403). Xoa no. Tai: $Zulu11WinX86Url - dat file zip vung $base, chay lai (hoac giai nen thu cong vao $base)."
   }
   try {
-    Expand-Archive -Path $zip -DestinationPath $base -Force
+    Invoke-PosExpandZip -Zip $zip -Dest $base
   } catch {
     throw "Giai nen that bai: $_.`nGiai nen thu cong (chuot phai giai) vao: $base"
   }
