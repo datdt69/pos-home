@@ -1,115 +1,16 @@
-[Fri 04/24/2026 16:18:51.93] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 16:18:51.94] ERR no pos-app.jar at C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\pos-app.jar
-[Fri 04/24/2026 21:04:01.47] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:04:01.47] ERR no pos-app.jar at C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home\pos-app.jar
-[Fri 04/24/2026 21:07:31.65] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:07:31.66] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:11:34.66] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:11:34.66] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:18:08.64] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:18:08.64] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:24:56.25] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:24:56.26] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:28:53.76] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:28:53.76] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:30:33.53] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:30:33.54] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:33:40.73] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:33:40.73] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:35:27.02] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:35:27.02] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:37:13.87] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:37:13.88] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:41:19.16] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:41:19.16] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:42:15.05] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:42:15.05] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:44:05.10] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:44:05.11] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 21:48:59.46] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 21:48:59.46] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Fri 04/24/2026 22:16:06.53] run.bat: dung target\pos-app.jar va target\jfx
-[Fri 04/24/2026 22:16:06.53] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Sat 04/25/2026 17:40:01.25] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 17:40:01.26] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Sat 04/25/2026 17:40:01.94] ERR need Java 11, set JAVA_HOME
-[Sat 04/25/2026 17:41:43.41] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 17:41:43.42] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
-[Sat 04/25/2026 17:52:02.68] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 17:52:02.68] run.bat APP_DIR=c:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
+[boot] Sat 04/25/2026 18:55:55.29 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat moi
+[Sat 04/25/2026 18:55:55.30] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | JAR+jfx+lib: target\ (sau mvn package)
  
-=== JVM chay @ Sat 04/25/2026 17:52:03.03 === 
-JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
-=== 
-
-SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-SLF4J: Defaulting to no-operation (NOP) logger implementation
-SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
- 
-[OK] ung dung thoat @ Sat 04/25/2026 17:52:09.78 ma 0
-[Sat 04/25/2026 18:01:59.37] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 18:01:59.37] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
- 
-=== JVM chay @ Sat 04/25/2026 18:01:59.65 === 
-JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
-=== 
-
-SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-SLF4J: Defaulting to no-operation (NOP) logger implementation
-SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
- 
-[OK] ung dung thoat @ Sat 04/25/2026 18:13:08.73 ma 0
-[Sat 04/25/2026 18:22:46.74] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 18:22:46.74] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
- 
-=== JVM chay @ Sat 04/25/2026 18:22:47.18 === 
-JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
-=== 
-
- 
-[OK] ung dung thoat @ Sat 04/25/2026 18:22:47.18 ma 0
-[Sat 04/25/2026 18:22:51.01] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 18:22:51.01] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
- 
-=== JVM chay @ Sat 04/25/2026 18:22:51.46 === 
-JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
-=== 
-
- 
-[OK] ung dung thoat @ Sat 04/25/2026 18:22:51.47 ma 0
-[Sat 04/25/2026 18:23:49.06] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 18:23:49.06] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
- 
-=== JVM chay @ Sat 04/25/2026 18:23:49.50 === 
-JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
-=== 
-
- 
-[OK] ung dung thoat @ Sat 04/25/2026 18:23:49.50 ma 0
-[Sat 04/25/2026 18:24:42.97] run.bat: dung target\pos-app.jar va target\jfx
-[Sat 04/25/2026 18:24:42.98] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home
- 
-=== JVM chay @ Sat 04/25/2026 18:24:43.55 === 
-JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
-=== 
-
-SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
-SLF4J: Defaulting to no-operation (NOP) logger implementation
-SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
- 
-[OK] ung dung thoat @ Sat 04/25/2026 18:24:48.64 ma 0
-[Sat 04/25/2026 18:42:45.74] run.bat APP_DIR=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | JAR+jfx+lib: target\ (sau mvn package)
- 
-=== JVM chay @ Sat 04/25/2026 18:42:46.24 === 
+=== JVM chay @ Sat 04/25/2026 18:55:55.83 === 
 JAVA: C:\Program Files\Eclipse Adoptium\jdk-21.0.10.7-hotspot\bin\java.exe 
 === 
 [run.bat: den day = da tim duoc java; doan duoi: output JVM (loi, SLF4J...) hoac rong] 
 [run.bat: cua so cmd tat nhanh - dung run_debug.bat hoac: set POS_DEBUG=1] 
 
-[run.bat: dang goi com.pos.Main, ghi vao chay_pos.log] 
+[POS_DEBUG=1: in ra console VA ghi vao chay_pos.log] 
 SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
  
-[OK] ung dung thoat @ Sat 04/25/2026 18:42:51.76 ma 0
- [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_debug.bat hoac bam dup run.bat voi set POS_DEBUG=1]
+[OK] ung dung thoat @ Sat 04/25/2026 18:56:01.47 ma 0
+ [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_win7_pos.bat hoac bam dup run.bat voi set POS_DEBUG=1]

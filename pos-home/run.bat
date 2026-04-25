@@ -13,6 +13,8 @@ if "!LAST!"=="\" set "APP_DIR=%APP_DIR:~0,-1%"
 set "RL=%APP_DIR%\chay_pos.log"
 rem Win7 / USB / quyen: chay_pos.log o thu muc du an that bai. Luon ghi them ban %TMP% de van co log.
 set "RL7=%TMP%\chay_pos_may7.log"
+if exist "%RL%" del /q "%RL%" 2>nul
+(echo [boot] %date% %time% APP=!APP_DIR! ^| run.bat moi) >> "%RL%" 2>&1
 (echo [boot] %date% %time% APP=!APP_DIR! ^| RL may chu pos + RL7=Temp) >> "%RL7%" 2>&1
 
 set "JAR=%APP_DIR%\pos-app.jar"
@@ -127,7 +129,7 @@ if "%DOPRISM%"=="1" (
 
 rem Ghi toan bo loi JVM vao chay_pos.log (1>nul truoc day lam POS khong biet li do)
 ver >nul
-(echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo [run.bat: den day = da tim duoc java; doan duoi: output JVM ^(loi, SLF4J...^) hoac rong] & echo [run.bat: cua so cmd tat nhanh - dung run_debug.bat hoac: set POS_DEBUG=1] & echo.)>>"%RL%"
+(echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo [run.bat: den day = da tim duoc java; doan duoi: output JVM ^(loi, SLF4J...^) hoac rong] & echo [run.bat: cua so cmd tat nhanh - dung run_win7_pos.bat hoac: set POS_DEBUG=1] & echo.)>>"%RL%"
 
 rem Phai long if (POS_DEBUG) roi else (ghi log). CMD: if A if B (x) else (y) - neu A false thi Y khong chay, java co the khong bao gio chay, ma 0 gia!
 if /i "%POS_DEBUG%"=="1" (
@@ -135,8 +137,9 @@ if /i "%POS_DEBUG%"=="1" (
     (echo [POS_DEBUG+JAVAW: start /wait javaw] )>>"%RL%"
     start "POS" /wait "!JAVA_CMD!" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
   ) else (
-    (echo [POS_DEBUG=1: ra console, khong ghi vao chay_pos.log] )>>"%RL%"
-    "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
+    (echo [POS_DEBUG=1: in ra console VA ghi vao chay_pos.log] )>>"%RL%"
+    "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main 1>>"%RL%" 2>&1
+    type "%RL%"
   )
 ) else (
   (echo [run.bat: dang goi com.pos.Main, ghi vao chay_pos.log] )>>"%RL%"
@@ -153,7 +156,7 @@ if not "%EXITCODE%"=="0" if /i not "%POS_NO_PAUSE%"=="1" (
 )
 if "%EXITCODE%"=="0" (
   (echo. & echo [OK] ung dung thoat @ %date% %time% ma 0)>>"%RL%"
-  (echo. [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_debug.bat hoac bam dup run.bat voi set POS_DEBUG=1])>>"%RL%"
+  (echo. [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_win7_pos.bat hoac bam dup run.bat voi set POS_DEBUG=1])>>"%RL%"
 )
 
 if /i "%POS_KEEP_OPEN%"=="1" (
