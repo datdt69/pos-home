@@ -96,7 +96,7 @@ if exist "!LIBDIR!" (
 )
 set "JVM_JFX=--add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED --add-opens=javafx.graphics/com.sun.glass.utils=ALL-UNNAMED --add-opens=javafx.graphics/javafx.css=ALL-UNNAMED --add-opens=javafx.base/com.sun.javafx.runtime=ALL-UNNAMED"
 if /i "%POS_THEME%"=="light" set "POS_EXTRA=-Dpos.theme=light"
-rem Loi "QuantumRenderer: no suitable pipeline" / d3d, sw: may Win7, GPU, RDP, VC++ - thu ve software (sw) truoc. POS 32: mac dinh; tat: set POS_PRISM_SW=0
+rem Pipeline JavaFX: mac dinh es2,sw,d3d ^(J32^). Ghi de: set POS_PRISM_ORDER=es2,sw. Verbose: POS_PRISM_VERBOSE=1. Tat: POS_PRISM_SW=0
 if /i "%POS_PRISM_SW%"=="0" (
   set "DOPRISM=0"
 ) else if /i "%POS_PRISM_SW%"=="1" (
@@ -107,8 +107,14 @@ if /i "%POS_PRISM_SW%"=="0" (
   set "DOPRISM=0"
 )
 if "%DOPRISM%"=="1" (
-  if defined POS_EXTRA (set "POS_EXTRA=!POS_EXTRA! -Dprism.order=sw -Dprism.forceGPU=false") else (set "POS_EXTRA=-Dprism.order=sw -Dprism.forceGPU=false")
-  (echo. [run.bat: -Dprism.order=sw may Win7 / pipeline])>>"%RL%"
+  if not defined POS_PRISM_ORDER (set "POS_PRISM_ORDER=es2,sw,d3d")
+  if defined POS_EXTRA (
+    set "POS_EXTRA=!POS_EXTRA! -Dprism.order=!POS_PRISM_ORDER! -Dprism.forceGPU=false -Dglass.win.uiScale=1.0"
+  ) else (
+    set "POS_EXTRA=-Dprism.order=!POS_PRISM_ORDER! -Dprism.forceGPU=false -Dglass.win.uiScale=1.0"
+  )
+  if /i "%POS_PRISM_VERBOSE%"=="1" (set "POS_EXTRA=!POS_EXTRA! -Dprism.verbose=true")
+  (echo. [run.bat: -Dprism.order=!POS_PRISM_ORDER! - neu van loi: cai vc_redist x86, driver; thu POS_PRISM_ORDER=sw hoac=es2,sw])>>"%RL%"
 )
 
 rem Ghi toan bo loi JVM vao chay_pos.log (1>nul truoc day lam POS khong biet li do)
