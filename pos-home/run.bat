@@ -15,18 +15,23 @@ set "RL=%APP_DIR%\chay_pos.log"
 set "JAR=%APP_DIR%\pos-app.jar"
 set "JFXDIR=%APP_DIR%\jfx"
 set "LIBDIR=%APP_DIR%\lib"
-rem Sau mvn package JAR o target\ - chay run.bat duoi thu muc du an van duoc
+set "USING_TARGET="
+rem Sau mvn package: JAR nam target\ - run.bat van chay duoc tu thu muc goc
 if not exist "%JAR%" (
   if exist "%APP_DIR%\target\pos-app.jar" (
     set "JAR=%APP_DIR%\target\pos-app.jar"
     set "JFXDIR=%APP_DIR%\target\jfx"
     set "LIBDIR=%APP_DIR%\target\lib"
-    (echo [%date% %time%] run.bat: dung target\pos-app.jar va target\jfx)>>"%RL%"
+    set "USING_TARGET=1"
   )
 )
 
 cd /d "%APP_DIR%" 2>nul
-(echo [%date% %time%] run.bat APP_DIR=%APP_DIR%)>>"%RL%"
+if defined USING_TARGET (
+  (echo [%date% %time%] run.bat APP_DIR=%APP_DIR% ^| JAR+jfx+lib: target\ ^(sau mvn package^))>>"%RL%"
+) else (
+  (echo [%date% %time%] run.bat APP_DIR=%APP_DIR% ^| JAR+jfx+lib: thu muc goc)>>"%RL%"
+)
 if not exist "%JAR%" (
   (echo [%date% %time%] ERR khong thay pos-app.jar. Chay: mvn -DskipTests package ^(JAR: %APP_DIR%\pos-app.jar hoac %APP_DIR%\target\pos-app.jar^))>>"%RL%"
   goto :show_err
@@ -53,7 +58,7 @@ if exist "!JFXDIR!\javafx-base-18*.jar" (
 
 call :find_java11
 if errorlevel 1 (
-  (echo [%date% %time%] ERR need Java 11+. Cai JDK hoac dung thu muc Zulu: !LOCALAPPDATA!\pos-jdk\zulu11*  ; hoac set JAVA_HOME)>>"%RL%"
+  (echo [%date% %time%] ERR: khong chay duoc "java" hoac version khong 11-25. JDK 11/17/21/... deu duoc. Cai JDK hoac set JAVA_HOME=thu muc co bin\java.exe ^(vi du Zulu: !LOCALAPPDATA!\pos-jdk\zulu11*^))>>"%RL%"
   goto :show_err
 )
 rem May 32-bit: JAR javafx phai *-win-x86*. (ban *-win.jar* la 64 bit). Cache .openjfx cu 64 -> UnsatisfiedLinkError AMD64 on IA32
@@ -119,7 +124,7 @@ if "%DOPRISM%"=="1" (
 
 rem Ghi toan bo loi JVM vao chay_pos.log (1>nul truoc day lam POS khong biet li do)
 ver >nul
-(echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo.)>>"%RL%"
+(echo. & echo === JVM chay @ %date% %time% === & echo JAVA: !JAVA_CMD! & echo === & echo [run.bat: den day = da tim duoc java; doan duoi: output JVM ^(loi, SLF4J...^) hoac rong] & echo [run.bat: cua so cmd tat nhanh - dung run_debug.bat hoac: set POS_DEBUG=1] & echo.)>>"%RL%"
 
 rem Phai long if (POS_DEBUG) roi else (ghi log). CMD: if A if B (x) else (y) - neu A false thi Y khong chay, java co the khong bao gio chay, ma 0 gia!
 if /i "%POS_DEBUG%"=="1" (
@@ -131,6 +136,7 @@ if /i "%POS_DEBUG%"=="1" (
     "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main
   )
 ) else (
+  (echo [run.bat: dang goi com.pos.Main, ghi vao chay_pos.log] )>>"%RL%"
   "%JAVA_CMD%" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base !JVM_JFX! !POS_EXTRA! -Dfile.encoding=UTF-8 -Dprism.lcdtext=false -cp "!CP!" com.pos.Main 1>>"%RL%" 2>&1
 )
 set "EXITCODE=!ERRORLEVEL!"
@@ -142,7 +148,10 @@ if not "%EXITCODE%"=="0" if /i not "%POS_NO_PAUSE%"=="1" (
   echo.
   pause
 )
-if "%EXITCODE%"=="0" (echo. & echo [OK] ung dung thoat @ %date% %time% ma 0)>>"%RL%"
+if "%EXITCODE%"=="0" (
+  (echo. & echo [OK] ung dung thoat @ %date% %time% ma 0)>>"%RL%"
+  (echo. [Ghi chu: ma 0 = JVM da thoat. Neu khong thay man hinh app: chay run_debug.bat hoac bam dup run.bat voi set POS_DEBUG=1])>>"%RL%"
+)
 
 if /i "%POS_KEEP_OPEN%"=="1" (
   if "%EXITCODE%"=="0" (
