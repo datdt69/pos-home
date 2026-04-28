@@ -4,12 +4,15 @@ setlocal EnableExtensions EnableDelayedExpansion
 
 for %%I in ("%~dp0.") do set "APP_DIR=%%~fI"
 if "!APP_DIR:~-1!"=="\" set "APP_DIR=!APP_DIR:~0,-1!"
+if not defined TEMP set "TEMP=%TMP%"
+if not defined TMP set "TMP=%TEMP%"
 
 set "RL=%APP_DIR%\chay_pos.log"
-set "RL7=%TMP%\chay_pos_may7.log"
+set "RL7=%TEMP%\chay_pos_may7.log"
 if exist "%RL%" del /q "%RL%" 2>nul
 (echo [boot] %date% %time% APP=!APP_DIR! ^| run.bat win7-32)>>"%RL%" 2>&1
 (echo [boot] %date% %time% APP=!APP_DIR! ^| run.bat win7-32)>>"%RL7%" 2>&1
+(echo [%date% %time%] STEP init_paths)>>"%RL%"
 
 set "JAR=%APP_DIR%\pos-app.jar"
 set "JFXDIR=%APP_DIR%\jfx"
@@ -54,6 +57,7 @@ goto :show_err
 
 :bundle_ok
 
+(echo [%date% %time%] STEP detect_java_x86)>>"%RL%"
 call :find_java11_x86
 if errorlevel 1 (
   if "!AUTOSETUP_DONE!"=="0" (
@@ -85,6 +89,7 @@ if not defined JFXP (
   goto :show_err
 )
 
+(echo [%date% %time%] STEP launch_javafx)>>"%RL%"
 set "CP=%JAR%"
 if exist "!LIBDIR!" for %%F in ("!LIBDIR!\*.jar") do set "CP=!CP!;%%F"
 set "JVM_OPTS=-Xms64m -Xmx256m -XX:+UseSerialGC -XX:MaxMetaspaceSize=128m"
@@ -242,6 +247,7 @@ echo.
 echo Loi khi khoi dong POS Win7 32-bit. Xem log:
 echo   %RL%
 echo   %RL7%
+echo Neu van khong ro loi: mo CMD va chay "cmd /k run.bat"
 echo.
 pause
 endlocal & exit /b 1

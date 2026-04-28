@@ -509,6 +509,6 @@ Write-Host '  Vao Desktop, bam dup "POS nha".' -ForegroundColor Gray
 Write-Host ""
 
 if ($AutoRun) {
-  Write-Host "Dang mo app..." -ForegroundColor Cyan
-  Start-Process -FilePath $RunBat -WorkingDirectory $Root
+  Write-Host "Dang mo app (giu cua so de xem loi neu co)..." -ForegroundColor Cyan
+  Start-Process -FilePath "cmd.exe" -ArgumentList @("/k", "`"$RunBat`"") -WorkingDirectory $Root
 }
