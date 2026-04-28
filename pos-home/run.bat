@@ -167,15 +167,6 @@ exit /b 0
 
 :find_java11_x86
 set "JAVA_CMD="
-(echo [%date% %time%] STEP java_check_java_home)>>"%RL%"
-
-if defined JAVA_HOME if exist "!JAVA_HOME!\bin\java.exe" (
-  call :is_java11 "!JAVA_HOME!\bin\java.exe"
-  if not errorlevel 1 (
-    call :is_x86 "!JAVA_HOME!\bin\java.exe"
-    if not errorlevel 1 (set "JAVA_CMD=!JAVA_HOME!\bin\java.exe" & exit /b 0)
-  )
-)
 
 set "_PJD=%LOCALAPPDATA%\pos-jdk"
 (echo [%date% %time%] STEP java_check_pos_jdk)>>"%RL%"
