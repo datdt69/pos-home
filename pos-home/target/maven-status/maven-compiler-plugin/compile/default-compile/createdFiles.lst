@@ -27,6 +27,7 @@ com\pos\controller\MainController.class
 com\pos\repository\ReportRepository$ProductSalesRow.class
 com\pos\repository\OrderRepository.class
 com\pos\controller\SettingsController.class
+com\pos\controller\OrderController$1.class
 com\pos\util\DBConnection.class
 com\pos\util\UiAlerts.class
 com\pos\repository\MenuRepository.class

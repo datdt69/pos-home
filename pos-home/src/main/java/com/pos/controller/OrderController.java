@@ -14,7 +14,9 @@ import com.pos.util.PrinterUtil;
 import com.pos.util.UiAlerts;
 import javafx.beans.InvalidationListener;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javafx.animation.PauseTransition;
@@ -84,6 +86,11 @@ public class OrderController {
    private final OrderItemRepository orderItemRepository = new OrderItemRepository();
    private final MenuRepository menuRepository = new MenuRepository();
    private final CategoryRepository categoryRepository = new CategoryRepository();
+   private final Map<String, List<MenuItem>> menuSearchCache = new LinkedHashMap<String, List<MenuItem>>(32, 0.75f, true) {
+      protected boolean removeEldestEntry(Map.Entry<String, List<MenuItem>> eldest) {
+         return this.size() > 32;
+      }
+   };
    private Integer selectedCategoryId;
    private Integer activeOrderId;
    private final ObservableList<OrderItem> lineItems = FXCollections.observableArrayList();
@@ -640,12 +647,7 @@ public class OrderController {
       String q = this.searchField.getText() == null ? "" : this.searchField.getText().trim();
 
       try {
-         List<MenuItem> items;
-         if (q.isEmpty()) {
-            items = this.menuRepository.searchByName(null, this.selectedCategoryId);
-         } else {
-            items = this.menuRepository.searchByName(q, this.selectedCategoryId);
-         }
+         List<MenuItem> items = this.findMenuItemsCached(q, this.selectedCategoryId);
          this.filteredMenuItems = items;
          if (resetPage) {
             this.currentMenuPage = 0;
@@ -659,6 +661,24 @@ public class OrderController {
       } catch (Exception var8) {
          UiAlerts.error("Lỗi thực đơn", var8.getMessage());
       }
+   }
+
+   private List<MenuItem> findMenuItemsCached(String query, Integer categoryId) throws Exception {
+      String key = this.buildMenuCacheKey(query, categoryId);
+      List<MenuItem> cached = this.menuSearchCache.get(key);
+      if (cached != null) {
+         return cached;
+      }
+      String dbQuery = query == null || query.isBlank() ? null : query;
+      List<MenuItem> loaded = this.menuRepository.searchByName(dbQuery, categoryId);
+      this.menuSearchCache.put(key, loaded);
+      return loaded;
+   }
+
+   private String buildMenuCacheKey(String query, Integer categoryId) {
+      String q = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
+      String cat = categoryId == null ? "all" : String.valueOf(categoryId);
+      return cat + "|" + q;
    }
 
    private int computeTotalPages() {

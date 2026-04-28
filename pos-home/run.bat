@@ -26,7 +26,9 @@ if not exist "%JAR%" (
   echo [%date% %time%] ERR missing_jar %JAR%>>"%RL%"
   goto :show_err
 )
-if not exist "%JFXDIR%\javafx-base-*-win-x86.jar" (
+echo [%date% %time%] STEP check_bundle>>"%RL%"
+dir /b "%JFXDIR%\javafx-base-*-win-x86.jar" >nul 2>&1
+if errorlevel 1 (
   echo [%date% %time%] ERR missing_jfx_x86 %JFXDIR%>>"%RL%"
   goto :show_err
 )
@@ -36,21 +38,21 @@ set "JAVA_CMD="
 for /d %%D in ("%LOCALAPPDATA%\pos-jdk\zulu11*") do (
   if exist "%%~D\bin\java.exe" (
     set "JAVA_CMD=%%~D\bin\java.exe"
-    goto :java_ok
   )
 )
+if defined JAVA_CMD goto :java_ok
 for /d %%D in ("C:\Program Files (x86)\Eclipse Adoptium\*") do (
   if exist "%%~D\bin\java.exe" (
     set "JAVA_CMD=%%~D\bin\java.exe"
-    goto :java_ok
   )
 )
+if defined JAVA_CMD goto :java_ok
 for /d %%D in ("C:\Program Files (x86)\Java\jdk-11*") do (
   if exist "%%~D\bin\java.exe" (
     set "JAVA_CMD=%%~D\bin\java.exe"
-    goto :java_ok
   )
 )
+if defined JAVA_CMD goto :java_ok
 echo [%date% %time%] ERR java_x86_not_found>>"%RL%"
 goto :show_err
 
