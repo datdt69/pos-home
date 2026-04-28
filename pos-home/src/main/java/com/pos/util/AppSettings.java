@@ -13,10 +13,14 @@ import java.util.Properties;
  */
 public final class AppSettings {
    public static final String DEFAULT_SETTINGS_PATH = "C:\\POS-App\\settings.properties";
+   public static final String PRINT_MODE_THERMAL_COM = "THERMAL_COM";
+   public static final String PRINT_MODE_A4_WINDOWS = "A4_WINDOWS";
    private static final String KEY_PORT = "printer.port";
    /** Tốc độ nối tiếp. Nhiều máy in nhiệt mặc định 115200 thay vì 9600. */
    private static final String KEY_BAUD = "printer.baud";
    private static final String KEY_PAPER = "printer.paper";
+   private static final String KEY_PRINT_MODE = "printer.mode";
+   private static final String KEY_WINDOWS_PRINTER_NAME = "printer.windows.name";
    private static final String KEY_NAME = "shop.name";
    private static final String KEY_ADDRESS = "shop.address";
    private static final String KEY_PHONE = "shop.phone";
@@ -62,7 +66,7 @@ public final class AppSettings {
    }
 
    public String getPrinterPort() {
-      return n(this.props.getProperty(KEY_PORT, "").trim());
+      return n(this.props.getProperty(KEY_PORT, "COM1").trim());
    }
 
    public void setPrinterPort(String port) {
@@ -70,21 +74,21 @@ public final class AppSettings {
    }
 
    public int getPrinterBaudRate() {
-      String s = n(this.props.getProperty(KEY_BAUD, "9600")).trim();
+      String s = n(this.props.getProperty(KEY_BAUD, "115200")).trim();
       try {
          int b = Integer.parseInt(s);
          if (b < 1200 || b > 2000000) {
-            return 9600;
+            return 115200;
          }
          return b;
       } catch (NumberFormatException e) {
-         return 9600;
+         return 115200;
       }
    }
 
    public void setPrinterBaudRate(int baud) {
       if (baud < 1200 || baud > 2000000) {
-         baud = 9600;
+         baud = 115200;
       }
       this.props.setProperty(KEY_BAUD, Integer.toString(baud));
    }
@@ -130,7 +134,32 @@ public final class AppSettings {
    }
 
    public boolean isPrinterPortConfigured() {
-      return !this.getPrinterPort().isBlank();
+      String p = this.getPrinterPort();
+      return p != null && !p.isBlank();
+   }
+
+   public String getPrintMode() {
+      String m = n(this.props.getProperty(KEY_PRINT_MODE, PRINT_MODE_THERMAL_COM)).trim();
+      if (!PRINT_MODE_A4_WINDOWS.equals(m) && !PRINT_MODE_THERMAL_COM.equals(m)) {
+         return PRINT_MODE_THERMAL_COM;
+      }
+      return m;
+   }
+
+   public void setPrintMode(String mode) {
+      String m = n(mode).trim();
+      if (!PRINT_MODE_A4_WINDOWS.equals(m)) {
+         m = PRINT_MODE_THERMAL_COM;
+      }
+      this.props.setProperty(KEY_PRINT_MODE, m);
+   }
+
+   public String getWindowsPrinterName() {
+      return n(this.props.getProperty(KEY_WINDOWS_PRINTER_NAME, "")).trim();
+   }
+
+   public void setWindowsPrinterName(String name) {
+      this.props.setProperty(KEY_WINDOWS_PRINTER_NAME, n(name).trim());
    }
 
    public Path getFilePath() {

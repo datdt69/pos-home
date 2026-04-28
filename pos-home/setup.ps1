@@ -1,5 +1,5 @@
 ﻿#Requires -Version 5.1
-# Cai dat 1 lan: JDK 11 (Zulu 32-bit neu may 32bit; Temurin 11 neu winget), build mvnw -Ppos32 khi can, shortcut Desktop.
+# Cai dat 1 lan cho Win7 32-bit: JDK 11 x86 (Zulu), build mvnw, tao shortcut Desktop.
 # Chay: chuot phai > Run with PowerShell, hoac go setup.bat / CAI_1_LAN_POS.bat
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -199,11 +199,12 @@ function Test-Is32BitWindows {
 
 function Get-NoWingetInstallHint {
   return @"
-May khong co winget (Windows 7/8.1 thuong vay; winget can Windows 10+).
+Ung dung nay chi dong goi cho Windows 7 32-bit.
 
-THU CONG (Windows 64-bit):
-  1) https://adoptium.net/temurin/releases/?version=11
-  2) Windows x64, JDK .msi, cai va them PATH, dong cua so PowerShell, chay lai setup.
+Neu tu dong tai JDK that bai:
+  1) Tai file zip x86 tai: https://cdn.azul.com/zulu/bin/zulu11.76.21-ca-jdk11.0.25-win_i686.zip
+  2) Giai nen vao: %LOCALAPPDATA%\pos-jdk
+  3) Chay lai setup.
 "@
 }
 
@@ -316,32 +317,8 @@ function InstallZulu11x86FromUrl {
 }
 
 function Install-Jdk11 {
-  if (Test-Is32BitWindows) {
-    $m0, $j0, $h0 = InstallZulu11x86FromUrl
-    return $m0, $j0, $h0
-  }
-  if (Get-Command winget -ErrorAction SilentlyContinue) {
-    Write-Host ""
-    Write-Host 'Dang cai Eclipse Temurin JDK 11 (winget, may 64-bit)...' -ForegroundColor Cyan
-    $argsW = @(
-      "install", "-e", "--id", "EclipseAdoptium.Temurin.11.JDK",
-      "--accept-package-agreements", "--accept-source-agreements"
-    )
-    $null = Start-Process -FilePath "winget" -ArgumentList $argsW -Wait -PassThru -NoNewWindow
-    Write-Host 'Cho ghi nhanh sau khi cai MSI (5 giay)...' -ForegroundColor DarkGray
-    Start-Sleep -Seconds 5
-    for ($i = 0; $i -le 3; $i++) {
-      Refresh-PathFromRegistry
-      $ma, $jPath, $jHome = Apply-Java11ToSession
-      if ($ma -ge $MinJdk) { return $ma, $jPath, $jHome }
-      if ($i -lt 3) { Start-Sleep -Seconds 2 }
-    }
-    $aa, $bb, $cc = Apply-Java11ToSession
-    if ($aa -ge $MinJdk) { return $aa, $bb, $cc }
-  }
-  Write-Host ""
-  Write-Host (Get-NoWingetInstallHint) -ForegroundColor Yellow
-  throw "Cai JDK 11 that bai. Lam theo huong dan o tren (Temurin 11 x64) roi chay lai setup."
+  $m0, $j0, $h0 = InstallZulu11x86FromUrl
+  return $m0, $j0, $h0
 }
 
 function Get-JavaScanHint {
@@ -396,11 +373,7 @@ if ($ver -ge $MinJdk) {
   if ($ver -gt 0) {
     Write-Host "Hien co Java $ver, ung dung can JDK $MinJdk+ . Dang cai them..." -ForegroundColor Yellow
   } else {
-    if (Test-Is32BitWindows) {
-      Write-Host "Chua co JDK $MinJdk+ tren may 32-bit. Se tai Zulu 11 (x86)..." -ForegroundColor Yellow
-    } else {
-      Write-Host "Chua co JDK $MinJdk+ trong PATH. Dang cai Temurin 11 (neu co winget)..." -ForegroundColor Yellow
-    }
+    Write-Host "Chua co JDK $MinJdk+ x86. Se tai Zulu 11 (x86)..." -ForegroundColor Yellow
   }
   $ver2, $jPath2, $jHome2 = Install-Jdk11
   if ($ver2 -lt $MinJdk) {
@@ -418,13 +391,10 @@ if ($env:JAVA_HOME) {
   }
 }
 
-# --- mvn: profile may 32-bit (OpenJFX win-x86) ---
+# --- mvn: Win7 32-bit only (OpenJFX win-x86) ---
 $mvnArgs = @("-DskipTests", "package")
-if (Test-Is32BitWindows) {
-  $mvnArgs = @("-Ppos32", "-DskipTests", "package")
-  Write-Host ""
-  Write-Host "Build: profile pos32 (JavaFX nen Windows 32-bit)..." -ForegroundColor DarkCyan
-}
+Write-Host ""
+Write-Host "Build: Win7 32-bit only (JavaFX win-x86)..." -ForegroundColor DarkCyan
 
 # jfx 18+ / 2x can Java 16+; may Java 11 + Zulu 11: phai jfx 17.0.6. Zip cu co target\jfx\javafx-base-21... => clean package
 $jfxDir = Join-Path $Root "target\jfx"
@@ -438,11 +408,7 @@ if (Test-Path $jfxDir) {
   }
 }
 if ($staleJfx) {
-  if (Test-Is32BitWindows) {
-    $mvnArgs = @("-Ppos32", "clean", "-DskipTests", "package")
-  } else {
-    $mvnArgs = @("clean", "-DskipTests", "package")
-  }
+  $mvnArgs = @("clean", "-DskipTests", "package")
   Write-Host ""
   Write-Host "Phat hien jfx cu 18+ / 2x (Java 11 chay loi 61.0). Chay: mvnw $($mvnArgs -join ' ')" -ForegroundColor Yellow
 }
@@ -493,7 +459,7 @@ try {
 Write-Host ""
 Write-Host "=== XONG ===" -ForegroundColor Green
 Write-Host "  Shortcut: $linkPath"
-Write-Host "  (May 32-bit: da build voi -Ppos32; can JDK 11 x86, run.bat dung JAR + JavaFX 32)" -ForegroundColor DarkGray
+Write-Host "  (Win7 32-bit: da build JavaFX win-x86; can JDK 11 x86, run.bat dung JAR + JavaFX 32)" -ForegroundColor DarkGray
 Write-Host "  (Loi 'AMD 64-bit .dll on IA 32' khi chay: xoa thu muc .openjfx\cache dung cua user; hoac: `$env:POS_OPENJFX_CACHE_CLEAR='1'; .\run.bat` 1 lan)" -ForegroundColor DarkGray
 Write-Host '  Ghi chu: file zip tu may khac - chuot phai > Properties > Unblock neu Windows chan.' -ForegroundColor DarkGray
 Write-Host '  Vao Desktop, bam dup "POS nha".' -ForegroundColor Gray

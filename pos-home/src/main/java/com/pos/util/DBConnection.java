@@ -86,6 +86,7 @@ public final class DBConnection {
       }
 
       this.migratePaidAtUtcToVietnamIfNeeded();
+      this.migrateCatalogToMixueIfNeeded();
 
       try {
          if (this.isEmpty("category")) {
@@ -112,6 +113,37 @@ public final class DBConnection {
       }
    }
 
+   /**
+    * One-time catalog reset:
+    * - wipe old demo data
+    * - import MIXUE menu from current shop board
+    */
+   private void migrateCatalogToMixueIfNeeded() throws SQLException {
+      try (
+         Statement st = this.getConnection().createStatement();
+         ResultSet rs = st.executeQuery("PRAGMA user_version");
+      ) {
+         if (rs.next() && rs.getInt(1) >= 3) {
+            return;
+         }
+      }
+
+      Connection conn = this.getConnection();
+      conn.setAutoCommit(false);
+      try (Statement st = conn.createStatement()) {
+         st.executeUpdate("DELETE FROM order_item");
+         st.executeUpdate("DELETE FROM orders");
+         st.executeUpdate("DELETE FROM menu_item");
+         st.executeUpdate("DELETE FROM category");
+      }
+      this.seedData();
+      try (Statement st2 = conn.createStatement()) {
+         st2.executeUpdate("PRAGMA user_version = 3");
+      }
+      conn.commit();
+      conn.setAutoCommit(true);
+   }
+
    private boolean isEmpty(String table) throws SQLException {
       try (
          PreparedStatement ps = this.getConnection().prepareStatement("SELECT COUNT(*) FROM " + table);
@@ -127,35 +159,86 @@ public final class DBConnection {
 
    private void seedData() throws SQLException {
       Connection conn = this.getConnection();
-      conn.setAutoCommit(false);
-
-      try (Statement st = conn.createStatement()) {
-         st.executeUpdate("INSERT INTO category (name) VALUES ('Đồ ăn')");
-         st.executeUpdate("INSERT INTO category (name) VALUES ('Đồ uống')");
-         st.executeUpdate("INSERT INTO category (name) VALUES ('Tráng miệng')");
+      boolean ac = conn.getAutoCommit();
+      if (ac) {
+         conn.setAutoCommit(false);
       }
 
-      int catAn = 1;
-      int catUong = 2;
-      int catMiet = 3;
-      String insertMenu = "INSERT INTO menu_item (name, price, category_id, is_available) VALUES (?,?,?,?)\n";
+      try {
+         int catTraSua = this.insertCategory(conn, "Trà sữa");
+         int catTraHoaQua = this.insertCategory(conn, "Trà hoa quả");
+         int catKem = this.insertCategory(conn, "Kem");
+         int catDoAnVat = this.insertCategory(conn, "Đồ ăn vặt");
+         int catMyCay = this.insertCategory(conn, "Mỳ cay");
+         int catGaRan = this.insertCategory(conn, "Đùi gà sốt");
 
-      try (PreparedStatement ps = conn.prepareStatement(insertMenu)) {
-         this.addItem(ps, "Phở bò", 45000.0, catAn, 1);
-         this.addItem(ps, "Bún chả Hà Nội", 55000.0, catAn, 1);
-         this.addItem(ps, "Cơm tấm sườn", 50000.0, catAn, 1);
-         this.addItem(ps, "Gỏi cuốn", 35000.0, catAn, 1);
-         this.addItem(ps, "Bánh mì thịt", 25000.0, catAn, 1);
-         this.addItem(ps, "Trà đá", 5000.0, catUong, 1);
-         this.addItem(ps, "Cà phê sữa đá", 18000.0, catUong, 1);
-         this.addItem(ps, "Nước mía", 12000.0, catUong, 1);
-         this.addItem(ps, "Trà chanh", 15000.0, catUong, 1);
-         this.addItem(ps, "Chè khúc bạch", 22000.0, catMiet, 1);
-         ps.executeBatch();
+         String insertMenu = "INSERT INTO menu_item (name, price, category_id, is_available) VALUES (?,?,?,?)\n";
+         try (PreparedStatement ps = conn.prepareStatement(insertMenu)) {
+            this.addItem(ps, "Sữa tươi trân châu đường đen", 20000.0, catTraSua, 1);
+            this.addItem(ps, "Trà sữa trân châu đường đen", 25000.0, catTraSua, 1);
+            this.addItem(ps, "Trà sữa 3Q", 25000.0, catTraSua, 1);
+            this.addItem(ps, "Trà sữa bá vương", 30000.0, catTraSua, 1);
+            this.addItem(ps, "Trà sữa socola", 25000.0, catTraSua, 1);
+            this.addItem(ps, "Trà sữa thái đỏ", 25000.0, catTraSua, 1);
+            this.addItem(ps, "Trà sữa ô long", 25000.0, catTraSua, 1);
+            this.addItem(ps, "Trà sữa chanh dây", 25000.0, catTraSua, 1);
+            this.addItem(ps, "Sữa thạch kiwi kiwi", 22000.0, catTraSua, 1);
+            this.addItem(ps, "Trà ô long kiwi", 20000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Trà mâm xôi", 22000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Trà đào bốn mùa", 22000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Nước chanh tươi lạnh", 15000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Trà chanh lá lô hội", 17000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Trà đào tứ kỳ xuân", 20000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Trà ô long bốn mùa", 15000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Đường cam lá lô hội", 30000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Hồng trà mật ong", 15000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Hồng trà chanh", 15000.0, catTraHoaQua, 1);
+            this.addItem(ps, "Kem ốc quế", 10000.0, catKem, 1);
+            this.addItem(ps, "Super sundae trân châu đường đen", 25000.0, catKem, 1);
+            this.addItem(ps, "Super sundae xoài", 25000.0, catKem, 1);
+            this.addItem(ps, "Super sundae socola", 25000.0, catKem, 1);
+            this.addItem(ps, "Super sundae dâu tây", 25000.0, catKem, 1);
+            this.addItem(ps, "Super sundae mâm xôi", 25000.0, catKem, 1);
+            this.addItem(ps, "Trà kem nho", 25000.0, catKem, 1);
+            this.addItem(ps, "Trà kem mâm xôi", 25000.0, catKem, 1);
+            this.addItem(ps, "Xúc xích chiên", 10000.0, catDoAnVat, 1);
+            this.addItem(ps, "Lạp xưởng nướng", 15000.0, catDoAnVat, 1);
+            this.addItem(ps, "Xiên thập cẩm cá viên", 20000.0, catDoAnVat, 1);
+            this.addItem(ps, "Khoai tây chiên lắc phô mai", 30000.0, catDoAnVat, 1);
+            this.addItem(ps, "Xúc xích cá viên", 35000.0, catDoAnVat, 1);
+            this.addItem(ps, "Mỳ cay kim chi thập cẩm cá viên", 45000.0, catDoAnVat, 1);
+            this.addItem(ps, "Mỳ cay hải sản", 45000.0, catMyCay, 1);
+            this.addItem(ps, "Mỳ cay kim chi bò", 40000.0, catMyCay, 1);
+            this.addItem(ps, "Mỳ cay kim chi", 35000.0, catMyCay, 1);
+            this.addItem(ps, "Mỳ cay kim chi thập cẩm", 45000.0, catMyCay, 1);
+            this.addItem(ps, "Mỳ cay kim chi cá viên", 35000.0, catMyCay, 1);
+            this.addItem(ps, "Đùi gà rán", 30000.0, catGaRan, 1);
+            this.addItem(ps, "Đùi gà sốt cay", 35000.0, catGaRan, 1);
+            this.addItem(ps, "Đùi gà sốt gà ngọt", 35000.0, catGaRan, 1);
+            this.addItem(ps, "Đùi gà sốt kem hành", 35000.0, catGaRan, 1);
+            this.addItem(ps, "Đùi gà sốt phô mai", 35000.0, catGaRan, 1);
+            ps.executeBatch();
+         }
+         conn.commit();
+      } catch (SQLException e) {
+         conn.rollback();
+         throw e;
+      } finally {
+         conn.setAutoCommit(ac);
       }
+   }
 
-      conn.commit();
-      conn.setAutoCommit(true);
+   private int insertCategory(Connection conn, String name) throws SQLException {
+      try (PreparedStatement ps = conn.prepareStatement("INSERT INTO category (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+         ps.setString(1, name);
+         ps.executeUpdate();
+         try (ResultSet rs = ps.getGeneratedKeys()) {
+            if (rs.next()) {
+               return rs.getInt(1);
+            }
+         }
+      }
+      throw new SQLException("Khong tao duoc category: " + name);
    }
 
    private void addItem(PreparedStatement ps, String name, double price, int cat, int av) throws SQLException {

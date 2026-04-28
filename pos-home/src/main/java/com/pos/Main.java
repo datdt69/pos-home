@@ -22,9 +22,7 @@ public class Main extends Application {
          /* Mỗi lần mở app: xóa đơn đã thanh toán (PAID) có paid_at cũ hơn 3 tháng — giảm dung lượng DB. */
          try {
             int purged = new OrderRepository().purgePaidOrdersOlderThanMonths(3);
-            if (purged > 0) {
-               System.out.println("POS: đã dọn " + purged + " đơn đã thanh toán cũ hơn 3 tháng");
-            }
+            System.out.println("POS: dọn dữ liệu >3 tháng khi khởi động, số đơn đã xóa = " + purged);
          } catch (SQLException e) {
             e.printStackTrace();
          }

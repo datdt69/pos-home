@@ -13,11 +13,15 @@ import javafx.scene.control.TextField;
  */
 public class SettingsController {
    @FXML
+   private ComboBox<String> cmbPrintMode;
+   @FXML
    private ComboBox<String> cmbPort;
    @FXML
    private ComboBox<String> cmbBaud;
    @FXML
    private ComboBox<String> cmbPaper;
+   @FXML
+   private ComboBox<String> cmbWindowsPrinter;
    @FXML
    private TextField txtShopName;
    @FXML
@@ -31,6 +35,12 @@ public class SettingsController {
 
    @FXML
    private void initialize() {
+      this.cmbPrintMode.setItems(
+         javafx.collections.FXCollections.observableArrayList(
+            AppSettings.PRINT_MODE_THERMAL_COM,
+            AppSettings.PRINT_MODE_A4_WINDOWS
+         )
+      );
       this.cmbPaper.setItems(
          javafx.collections.FXCollections.observableArrayList("58mm", "80mm")
       );
@@ -50,16 +60,24 @@ public class SettingsController {
          this.txtShopName.setText(this.settings.getShopName());
          this.txtAddress.setText(this.settings.getShopAddress());
          this.txtPhone.setText(this.settings.getShopPhone());
+         this.cmbPrintMode.getSelectionModel().select(this.settings.getPrintMode());
          this.cmbPaper.getSelectionModel().select(this.settings.getPaper());
          this.selectBaud(this.settings.getPrinterBaudRate());
       } catch (Exception e) {
          UiAlerts.error("Cài đặt", e.getMessage());
       }
+      this.onRefreshWindowsPrinters();
       this.onRefreshPorts();
       String s = this.settings.getPrinterPort();
       if (s != null && !s.isBlank() && this.cmbPort.getItems().contains(s)) {
          this.cmbPort.getSelectionModel().select(s);
       }
+      String wp = this.settings.getWindowsPrinterName();
+      if (wp != null && !wp.isBlank() && this.cmbWindowsPrinter.getItems().contains(wp)) {
+         this.cmbWindowsPrinter.getSelectionModel().select(wp);
+      }
+      this.updatePrintModeUi();
+      this.cmbPrintMode.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> this.updatePrintModeUi());
    }
 
    @FXML
@@ -69,29 +87,46 @@ public class SettingsController {
    }
 
    @FXML
+   private void onRefreshWindowsPrinters() {
+      java.util.List<String> list = com.pos.util.PrinterUtil.getAvailableWindowsPrinters();
+      this.cmbWindowsPrinter.getItems().setAll(list);
+   }
+
+   @FXML
    private void onAutoDetect() {
       String p = com.pos.util.PrinterUtil.detectPrinterPort();
       if (p == null) {
-         UiAlerts.warn("Máy in", "Không tìm thấy cổng in phù hợp (gửi lệnh init). Hãy chọn COM thủ công.");
+         UiAlerts.warn("Máy in", "Không tự tìm thấy cổng XPrinter phù hợp. Hãy kiểm tra driver USB/COM, bật máy in rồi chọn COM thủ công.");
       } else {
          this.onRefreshPorts();
          this.cmbPort.getSelectionModel().select(p);
          this.selectBaud(PrinterUtil.getLastDetectedBaud());
-         UiAlerts.info("Máy in", "Gợi ý: " + p + " @ " + PrinterUtil.getLastDetectedBaud() + " baud. Bấm Lưu cài đặt.");
+         UiAlerts.info("Máy in", "Đã nhận diện máy in bill tại " + p + " @ " + PrinterUtil.getLastDetectedBaud() + " baud. Bấm In thử rồi Lưu cài đặt.");
       }
    }
 
    @FXML
    private void onTestPrint() {
-      String p = (String) this.cmbPort.getSelectionModel().getSelectedItem();
-      if (p == null || p.isBlank()) {
-         UiAlerts.warn("In thử", "Chọn cổng COM trước.");
-      } else {
+      String mode = this.getSelectedPrintMode();
+      if (AppSettings.PRINT_MODE_A4_WINDOWS.equals(mode)) {
+         String wp = this.cmbWindowsPrinter.getSelectionModel().getSelectedItem();
          try {
-            com.pos.util.PrinterUtil.printTest(p, this.getSelectedBaud());
-            UiAlerts.info("In thử", "Đã gửi bản in thử tới " + p + " @ " + this.getSelectedBaud());
+            PrinterUtil.printTestWindows(wp, this.cmbPaper.getValue());
+            UiAlerts.info("In thử", "Đã gửi bản in thử Windows tới " + (wp == null || wp.isBlank() ? "máy in mặc định" : wp));
          } catch (Exception e) {
             UiAlerts.error("In thử", e.getMessage());
+         }
+      } else {
+         String p = (String)this.cmbPort.getSelectionModel().getSelectedItem();
+         if (p == null || p.isBlank()) {
+            UiAlerts.warn("In thử", "Chọn cổng COM trước.");
+         } else {
+            try {
+               com.pos.util.PrinterUtil.printTest(p, this.getSelectedBaud());
+               UiAlerts.info("In thử", "Đã gửi bản in thử tới " + p + " @ " + this.getSelectedBaud());
+            } catch (Exception e) {
+               UiAlerts.error("In thử", e.getMessage());
+            }
          }
       }
    }
@@ -99,8 +134,10 @@ public class SettingsController {
    @FXML
    private void onSave() {
       try {
+         this.settings.setPrintMode(this.getSelectedPrintMode());
          this.settings.setPrinterPort(this.cmbPort.getValue() == null ? "" : this.cmbPort.getValue());
          this.settings.setPrinterBaudRate(this.getSelectedBaud());
+         this.settings.setWindowsPrinterName(this.cmbWindowsPrinter.getValue() == null ? "" : this.cmbWindowsPrinter.getValue());
          this.settings.setPaper(this.cmbPaper.getValue() == null ? "80mm" : this.cmbPaper.getValue());
          this.settings.setShopName(this.t(this.txtShopName.getText()));
          this.settings.setShopAddress(this.t(this.txtAddress.getText()));
@@ -136,5 +173,21 @@ public class SettingsController {
       } catch (NumberFormatException e) {
          return 9600;
       }
+   }
+
+   private String getSelectedPrintMode() {
+      String mode = this.cmbPrintMode.getSelectionModel().getSelectedItem();
+      if (AppSettings.PRINT_MODE_A4_WINDOWS.equals(mode)) {
+         return AppSettings.PRINT_MODE_A4_WINDOWS;
+      }
+      return AppSettings.PRINT_MODE_THERMAL_COM;
+   }
+
+   private void updatePrintModeUi() {
+      boolean thermal = AppSettings.PRINT_MODE_THERMAL_COM.equals(this.getSelectedPrintMode());
+      this.cmbPort.setDisable(!thermal);
+      this.cmbBaud.setDisable(!thermal);
+      this.cmbPaper.setDisable(!thermal);
+      this.cmbWindowsPrinter.setDisable(thermal);
    }
 }

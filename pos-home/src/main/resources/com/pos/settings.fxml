@@ -22,26 +22,35 @@
                 <ColumnConstraints minWidth="120" maxWidth="160" hgrow="NEVER"/>
                 <ColumnConstraints minWidth="200" hgrow="ALWAYS" maxWidth="600"/>
             </columnConstraints>
-            <Label text="Cổng in (COM)&#10;⚠ nếu chưa kết nối" styleClass="subtle" wrapText="true" GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
-            <VBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <Label text="Chế độ in" styleClass="subtle" GridPane.rowIndex="0" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
+            <ComboBox fx:id="cmbPrintMode" prefWidth="240" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Máy in A4 (Windows)" styleClass="subtle" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <ComboBox fx:id="cmbWindowsPrinter" prefWidth="360" minHeight="40" styleClass="combo-filter" maxWidth="480"/>
+                    <Button text="Làm mới" onAction="#onRefreshWindowsPrinters" styleClass="btn btn-secondary" minHeight="40"/>
+                </HBox>
+            </VBox>
+            <Label text="Cổng in (COM)&#10;XPrinter USB/Serial" styleClass="subtle" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <VBox spacing="6" GridPane.rowIndex="2" GridPane.columnIndex="1">
                 <HBox spacing="8" alignment="CENTER_LEFT">
                     <ComboBox fx:id="cmbPort" prefWidth="200" minHeight="40" styleClass="combo-filter" maxWidth="320"/>
                     <Button text="Làm mới" onAction="#onRefreshPorts" styleClass="btn btn-secondary" minHeight="40"/>
                 </HBox>
-                <Button text="Tự tìm máy in" onAction="#onAutoDetect" styleClass="btn btn-secondary" minHeight="36"/>
+                <Button text="Tự tìm XPrinter" onAction="#onAutoDetect" styleClass="btn btn-secondary" minHeight="36"/>
             </VBox>
-            <Label text="Tốc độ (baud)&#10;nhiều máy: 115200" styleClass="subtle" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
-            <ComboBox fx:id="cmbBaud" prefWidth="180" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-            <Label text="Khổ giấy" styleClass="subtle" GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
-            <ComboBox fx:id="cmbPaper" prefWidth="180" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-            <Label text="Tên cửa hàng" styleClass="subtle" GridPane.rowIndex="3" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
-            <TextField fx:id="txtShopName" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-            <Label text="Địa chỉ" styleClass="subtle" GridPane.rowIndex="4" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
-            <TextField fx:id="txtAddress" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-            <Label text="Số điện thoại" styleClass="subtle" GridPane.rowIndex="5" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
-            <TextField fx:id="txtPhone" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-            <Label text="Ghi chú" styleClass="subtle" wrapText="true" GridPane.rowIndex="6" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
-            <Label fx:id="lblSettingsPath" styleClass="result-count" wrapText="true" maxWidth="560" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label text="Tốc độ (baud)&#10;XPrinter thường: 115200" styleClass="subtle" wrapText="true" GridPane.rowIndex="3" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <ComboBox fx:id="cmbBaud" prefWidth="180" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Khổ giấy" styleClass="subtle" GridPane.rowIndex="4" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
+            <ComboBox fx:id="cmbPaper" prefWidth="180" minHeight="40" styleClass="combo-filter" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Tên cửa hàng" styleClass="subtle" GridPane.rowIndex="5" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
+            <TextField fx:id="txtShopName" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <Label text="Địa chỉ" styleClass="subtle" GridPane.rowIndex="6" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <TextField fx:id="txtAddress" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+            <Label text="Số điện thoại" styleClass="subtle" GridPane.rowIndex="7" GridPane.columnIndex="0" alignment="CENTER_LEFT"/>
+            <TextField fx:id="txtPhone" minHeight="40" maxWidth="Infinity" styleClass="search-field" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            <Label text="Ghi chú&#10;Bill dùng THERMAL_COM" styleClass="subtle" wrapText="true" GridPane.rowIndex="8" GridPane.columnIndex="0" alignment="TOP_LEFT"/>
+            <Label fx:id="lblSettingsPath" styleClass="result-count" wrapText="true" maxWidth="560" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
         </GridPane>
     </center>
     <bottom>

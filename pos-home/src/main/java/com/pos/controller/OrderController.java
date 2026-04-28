@@ -181,7 +181,29 @@ public class OrderController {
                }
 
                if (UiAlerts.confirmPrintReceipt()) {
-                  if (!st.isPrinterPortConfigured()) {
+                  String mode = st.getPrintMode();
+                  if (AppSettings.PRINT_MODE_A4_WINDOWS.equals(mode)) {
+                     while (true) {
+                        try {
+                           Order paid = this.orderRepository.findById(closeId).orElseThrow();
+                           List<OrderItem> lines = this.orderItemRepository.findByOrderIdWithNames(closeId);
+                           PrinterUtil.printReceiptWindowsA4(
+                              paid,
+                              lines,
+                              st.getWindowsPrinterName(),
+                              st.getPaper(),
+                              st.getShopName(),
+                              st.getShopAddress(),
+                              st.getShopPhone()
+                           );
+                           break;
+                        } catch (Exception ex) {
+                           if (!UiAlerts.confirmRetryPrint()) {
+                              break;
+                           }
+                        }
+                     }
+                  } else if (!st.isPrinterPortConfigured()) {
                      UiAlerts.warn("In hóa đơn", "Chưa cấu hình cổng máy in. Vào mục Cài đặt → chọn COM và lưu.");
                   } else {
                      while (true) {

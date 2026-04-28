@@ -36,7 +36,7 @@ goto :bundle_ok
 :need_autofix
 if "!AUTOFIX_DONE!"=="0" (
   set "AUTOFIX_DONE=1"
-  call :autofix_pos32_bundle
+  call :autofix_win7_bundle
   if errorlevel 1 goto :show_err
   call :resolve_paths
   goto :check_bundle
@@ -68,9 +68,11 @@ if errorlevel 1 (
   )
 )
 
-if exist "%USERPROFILE%\.openjfx\cache" (
-  (echo [%date% %time%] Xoa cache OpenJFX: %USERPROFILE%\.openjfx\cache)>>"%RL%"
-  rd /s /q "%USERPROFILE%\.openjfx\cache" 2>nul
+if /i "%POS_OPENJFX_CACHE_CLEAR%"=="1" (
+  if exist "%USERPROFILE%\.openjfx\cache" (
+    (echo [%date% %time%] Xoa cache OpenJFX (theo yeu cau): %USERPROFILE%\.openjfx\cache)>>"%RL%"
+    rd /s /q "%USERPROFILE%\.openjfx\cache" 2>nul
+  )
 )
 
 set "JFXP="
@@ -85,12 +87,14 @@ if not defined JFXP (
 
 set "CP=%JAR%"
 if exist "!LIBDIR!" for %%F in ("!LIBDIR!\*.jar") do set "CP=!CP!;%%F"
+set "JVM_OPTS=-Xms64m -Xmx256m -XX:+UseSerialGC -XX:MaxMetaspaceSize=128m"
 
 (echo JAVA: !JAVA_CMD!)>>"%RL%"
 (echo JFX : !JFXP!)>>"%RL%"
 (echo JAR : %JAR%)>>"%RL%"
+(echo JVM : !JVM_OPTS!)>>"%RL%"
 
-"!JAVA_CMD!" --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base -Dfile.encoding=UTF-8 -Dprism.order=es2,sw,d3d -Dprism.forceGPU=false -cp "!CP!" com.pos.Main 1>>"%RL%" 2>&1
+"!JAVA_CMD!" !JVM_OPTS! --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base -Dfile.encoding=UTF-8 -Dprism.order=es2,sw,d3d -Dprism.forceGPU=false -cp "!CP!" com.pos.Main 1>>"%RL%" 2>&1
 set "EXITCODE=!ERRORLEVEL!"
 
 if not "%EXITCODE%"=="0" (
@@ -129,19 +133,19 @@ if not exist "%JAR%" (
 )
 exit /b 0
 
-:autofix_pos32_bundle
+:autofix_win7_bundle
 (echo [%date% %time%] Auto-fix: don dep va build lai bundle Win7 32-bit...)>>"%RL%"
 if exist "%APP_DIR%\target\jfx" rd /s /q "%APP_DIR%\target\jfx" 2>nul
 if exist "%APP_DIR%\jfx" rd /s /q "%APP_DIR%\jfx" 2>nul
 if exist "%USERPROFILE%\.openjfx\cache" rd /s /q "%USERPROFILE%\.openjfx\cache" 2>nul
 if exist "%USERPROFILE%\.m2\repository\org\openjfx" rd /s /q "%USERPROFILE%\.m2\repository\org\openjfx" 2>nul
 if exist "%APP_DIR%\mvnw.cmd" (
-  call "%APP_DIR%\mvnw.cmd" -U clean -Ppos32 -DskipTests package 1>>"%RL%" 2>&1
+  call "%APP_DIR%\mvnw.cmd" -U clean -DskipTests package 1>>"%RL%" 2>&1
 ) else (
-  call mvn -U clean -Ppos32 -DskipTests package 1>>"%RL%" 2>&1
+  call mvn -U clean -DskipTests package 1>>"%RL%" 2>&1
 )
 if errorlevel 1 (
-  (echo [%date% %time%] ERR auto build pos32 that bai.)>>"%RL%"
+  (echo [%date% %time%] ERR auto build Win7 32-bit that bai.)>>"%RL%"
   exit /b 1
 )
 exit /b 0
