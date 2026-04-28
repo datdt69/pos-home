@@ -172,11 +172,9 @@ set "_PJD=%LOCALAPPDATA%\pos-jdk"
 (echo [%date% %time%] STEP java_check_pos_jdk)>>"%RL%"
 if exist "!_PJD!\" for /d %%D in ("!_PJD!\zulu11*") do (
   if exist "%%~D\bin\java.exe" (
-    call :is_java11 "%%~D\bin\java.exe"
-    if not errorlevel 1 (
-      call :is_x86 "%%~D\bin\java.exe"
-      if not errorlevel 1 (set "JAVA_CMD=%%~D\bin\java.exe" & exit /b 0)
-    )
+    (echo [%date% %time%] STEP java_use_pos_jdk %%~D\bin\java.exe)>>"%RL%"
+    set "JAVA_CMD=%%~D\bin\java.exe"
+    exit /b 0
   )
 )
 

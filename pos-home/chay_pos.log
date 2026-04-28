@@ -1,18 +1,4 @@
-[boot] Tue 04/28/2026 18:03:00.38 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat win7-32
-[Tue 04/28/2026 18:03:02.35] Auto-setup: chay setup.ps1 de cai Java x86...
-Chua co JDK 11+ x86. Se tai Zulu 11 (x86)...
-
-May 32-bit: dang tai JDK 11 (Zulu) ... (can vao duoc cdn.azul.com, TLS 1.2+)
-OK: Java 11 san sang (C:\Users\datdt\AppData\Local\pos-jdk\zulu11.76.21-ca-jdk11.0.25-win_i686\bin\java.exe)
-
-Build: Win7 32-bit only (JavaFX win-x86)...
-
-Da co target\pos-app.jar (jfx ~17.0.6): bo qua mvn package. Xoa target\ neu can build sach lai.
-
-=== XONG ===
-  Shortcut: C:\Users\datdt\OneDrive\Máy tính\POS nha.lnk
-  (Win7 32-bit: da build JavaFX win-x86; can JDK 11 x86, run.bat dung JAR + JavaFX 32)
-  (Loi 'AMD 64-bit .dll on IA 32' khi chay: xoa thu muc .openjfx\cache dung cua user; hoac: $env:POS_OPENJFX_CACHE_CLEAR='1'; .\run.bat 1 lan)
-  Ghi chu: file zip tu may khac - chuot phai > Properties > Unblock neu Windows chan.
-  Vao Desktop, bam dup "POS nha".
-
+[boot] Tue 04/28/2026 18:36:50.72 APP=C:\Users\datdt\.cursor\projects\C-Users-datdt-AppData-Local-Temp-79859c51-d3e2-4bce-88b7-39f13a078f79\pos-home | run.bat win7-32
+[Tue 04/28/2026 18:36:50.73] STEP init_paths
+[Tue 04/28/2026 18:36:50.74] STEP detect_java_x86
+[Tue 04/28/2026 18:36:50.75] STEP java_check_pos_jdk
