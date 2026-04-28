@@ -16,22 +16,24 @@ echo [%date% %time%] STEP init_paths>>"%RL%"
 set "JAR=%APP_DIR%\target\pos-app.jar"
 set "JFXDIR=%APP_DIR%\target\jfx"
 set "LIBDIR=%APP_DIR%\target\lib"
-if not exist "%JAR%" (
-  set "JAR=%APP_DIR%\pos-app.jar"
-  set "JFXDIR=%APP_DIR%\jfx"
-  set "LIBDIR=%APP_DIR%\lib"
-)
+if exist "%JAR%" goto :bundle_paths_ok
+set "JAR=%APP_DIR%\pos-app.jar"
+set "JFXDIR=%APP_DIR%\jfx"
+set "LIBDIR=%APP_DIR%\lib"
 
-if not exist "%JAR%" (
-  echo [%date% %time%] ERR missing_jar %JAR%>>"%RL%"
-  goto :show_err
-)
+:bundle_paths_ok
+if exist "%JAR%" goto :jar_ok
+echo [%date% %time%] ERR missing_jar %JAR%>>"%RL%"
+goto :show_err
+
+:jar_ok
 echo [%date% %time%] STEP check_bundle>>"%RL%"
 dir /b "%JFXDIR%\javafx-base-*-win-x86.jar" >nul 2>&1
-if errorlevel 1 (
-  echo [%date% %time%] ERR missing_jfx_x86 %JFXDIR%>>"%RL%"
-  goto :show_err
-)
+if not errorlevel 1 goto :bundle_ok
+echo [%date% %time%] ERR missing_jfx_x86 %JFXDIR%>>"%RL%"
+goto :show_err
+
+:bundle_ok
 
 echo [%date% %time%] STEP detect_java_x86>>"%RL%"
 set "JAVA_CMD="
@@ -72,10 +74,11 @@ echo JVM : !JVM_OPTS!>>"%RL%"
 
 "!JAVA_CMD!" !JVM_OPTS! --module-path "!JFXP!" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base -Dfile.encoding=UTF-8 -Dprism.order=es2,sw,d3d -Dprism.forceGPU=false -cp "!CP!" com.pos.Main 1>>"%RL%" 2>&1
 set "EXITCODE=!ERRORLEVEL!"
-if not "%EXITCODE%"=="0" (
-  echo [%date% %time%] [FAIL] ma !EXITCODE!>>"%RL%"
-  goto :show_err
-)
+if "%EXITCODE%"=="0" goto :app_ok
+echo [%date% %time%] [FAIL] ma !EXITCODE!>>"%RL%"
+goto :show_err
+
+:app_ok
 echo [%date% %time%] [OK] ung dung thoat ma 0>>"%RL%"
 if exist "%RL%" type "%RL%" >> "%RL7%" 2>&1
 endlocal & exit /b 0
