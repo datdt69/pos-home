@@ -3,10 +3,11 @@ chcp 65001 >nul
 setlocal
 cd /d "%~dp0"
 echo.
-echo === CA DAT POS (JDK 11; may 32-bit: chay 1 lan, can mang) ===
+echo === CA DAT POS TU DONG (Win7 32-bit) ===
 echo   Win7: can PowerShell 5.1 (cai: Windows Management Framework 5.1)
+echo   Se tu dong don dep bundle cu, build moi va mo app.
 echo.
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1" -ForceRebuild -AutoRun
 set "E=%ERRORLEVEL%"
 if not "%E%"=="0" (
   echo.
@@ -14,5 +15,4 @@ if not "%E%"=="0" (
   pause
   exit /b %E%
 )
-pause
 endlocal & exit /b 0

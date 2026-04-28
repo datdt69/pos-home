@@ -3,3 +3,16 @@
 Chua co JDK 11+ x86. Se tai Zulu 11 (x86)...
 
 May 32-bit: dang tai JDK 11 (Zulu) ... (can vao duoc cdn.azul.com, TLS 1.2+)
+OK: Java 11 san sang (C:\Users\datdt\AppData\Local\pos-jdk\zulu11.76.21-ca-jdk11.0.25-win_i686\bin\java.exe)
+
+Build: Win7 32-bit only (JavaFX win-x86)...
+
+Da co target\pos-app.jar (jfx ~17.0.6): bo qua mvn package. Xoa target\ neu can build sach lai.
+
+=== XONG ===
+  Shortcut: C:\Users\datdt\OneDrive\Máy tính\POS nha.lnk
+  (Win7 32-bit: da build JavaFX win-x86; can JDK 11 x86, run.bat dung JAR + JavaFX 32)
+  (Loi 'AMD 64-bit .dll on IA 32' khi chay: xoa thu muc .openjfx\cache dung cua user; hoac: $env:POS_OPENJFX_CACHE_CLEAR='1'; .\run.bat 1 lan)
+  Ghi chu: file zip tu may khac - chuot phai > Properties > Unblock neu Windows chan.
+  Vao Desktop, bam dup "POS nha".
+

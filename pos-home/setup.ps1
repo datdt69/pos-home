@@ -1,6 +1,11 @@
 ﻿#Requires -Version 5.1
 # Cai dat 1 lan cho Win7 32-bit: JDK 11 x86 (Zulu), build mvnw, tao shortcut Desktop.
 # Chay: chuot phai > Run with PowerShell, hoac go setup.bat / CAI_1_LAN_POS.bat
+param(
+  [switch]$ForceRebuild,
+  [switch]$AutoRun
+)
+
 $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12 } catch { }
@@ -11,6 +16,22 @@ $Root = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvoca
 Set-Location $Root
 
 $MinJdk = 11
+
+function Clear-OldPosBundle {
+  param([string]$base)
+  foreach ($p in @(
+    (Join-Path $base "jfx"),
+    (Join-Path $base "lib"),
+    (Join-Path $base "pos-app.jar"),
+    (Join-Path $base "target\jfx"),
+    (Join-Path $base "target\lib"),
+    (Join-Path $base "target\pos-app.jar")
+  )) {
+    if (Test-Path -LiteralPath $p) {
+      Remove-Item -LiteralPath $p -Recurse -Force -ErrorAction SilentlyContinue
+    }
+  }
+}
 
 function Refresh-PathFromRegistry {
   $m = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
@@ -412,6 +433,11 @@ if ($env:JAVA_HOME) {
 $mvnArgs = @("-DskipTests", "package")
 Write-Host ""
 Write-Host "Build: Win7 32-bit only (JavaFX win-x86)..." -ForegroundColor DarkCyan
+if ($ForceRebuild) {
+  Write-Host "Force rebuild: dang don dep bundle cu..." -ForegroundColor Yellow
+  Clear-OldPosBundle -base $Root
+  $mvnArgs = @("clean", "-DskipTests", "package")
+}
 
 # jfx 18+ / 2x can Java 16+; may Java 11 + Zulu 11: phai jfx 17.0.6. Zip cu co target\jfx\javafx-base-21... => clean package
 $jfxDir = Join-Path $Root "target\jfx"
@@ -481,3 +507,8 @@ Write-Host "  (Loi 'AMD 64-bit .dll on IA 32' khi chay: xoa thu muc .openjfx\cac
 Write-Host '  Ghi chu: file zip tu may khac - chuot phai > Properties > Unblock neu Windows chan.' -ForegroundColor DarkGray
 Write-Host '  Vao Desktop, bam dup "POS nha".' -ForegroundColor Gray
 Write-Host ""
+
+if ($AutoRun) {
+  Write-Host "Dang mo app..." -ForegroundColor Cyan
+  Start-Process -FilePath $RunBat -WorkingDirectory $Root
+}
