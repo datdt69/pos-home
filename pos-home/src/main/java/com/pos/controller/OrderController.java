@@ -29,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -76,7 +75,11 @@ public class OrderController {
    @FXML
    private Button btnCancel;
    @FXML
-   private ScrollPane menuScroll;
+   private Button btnPrevPage;
+   @FXML
+   private Button btnNextPage;
+   @FXML
+   private Label lblPageInfo;
    private final OrderRepository orderRepository = new OrderRepository();
    private final OrderItemRepository orderItemRepository = new OrderItemRepository();
    private final MenuRepository menuRepository = new MenuRepository();
@@ -85,8 +88,12 @@ public class OrderController {
    private Integer activeOrderId;
    private final ObservableList<OrderItem> lineItems = FXCollections.observableArrayList();
    private List<Category> categories = List.of();
+   private List<MenuItem> filteredMenuItems = List.of();
+   private int currentMenuPage;
    private final Map<Integer, String> categoryNameById = new HashMap<>();
    private boolean inEnsureBlock;
+   private static final int MENU_PAGE_SIZE = 12;
+   private final PauseTransition searchDebounce = new PauseTransition(Duration.millis(180.0));
 
    @FXML
    private void initialize() {
@@ -95,9 +102,7 @@ public class OrderController {
       this.listItems.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
       this.listItems.setStyle("-fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 0;");
       this.listItems.setCellFactory(lv -> new OrderController.OrderLineListCell());
-      if (this.menuScroll != null) {
-         VBox.setVgrow(this.menuScroll, Priority.ALWAYS);
-      }
+      this.searchDebounce.setOnFinished(e -> this.refreshMenuItems(true));
 
       this.lineItems.addListener((InvalidationListener) obs -> this.syncEmptyState());
       this.syncEmptyState();
@@ -118,7 +123,7 @@ public class OrderController {
          this.tabOpenOrders.setTabMinWidth(140.0);
          this.tabOpenOrders.setTabMaxWidth(180.0);
          this.refreshOrderTabs(null);
-         this.buildMenuGrid();
+         this.refreshMenuItems(true);
       } catch (Exception var3) {
          UiAlerts.error("Lỗi", var3.getMessage());
       }
@@ -287,7 +292,24 @@ public class OrderController {
 
    @FXML
    private void onSearchChange() {
-      this.buildMenuGrid();
+      this.searchDebounce.playFromStart();
+   }
+
+   @FXML
+   private void onPrevPage() {
+      if (this.currentMenuPage > 0) {
+         this.currentMenuPage--;
+         this.renderCurrentMenuPage();
+      }
+   }
+
+   @FXML
+   private void onNextPage() {
+      int totalPages = this.computeTotalPages();
+      if (this.currentMenuPage < totalPages - 1) {
+         this.currentMenuPage++;
+         this.renderCurrentMenuPage();
+      }
    }
 
    private void onQtyDelta(OrderItem oi, int d) {
@@ -348,7 +370,7 @@ public class OrderController {
          if (Boolean.TRUE.equals(s)) {
             all.getStyleClass().add("chip-on");
             this.selectedCategoryId = null;
-            this.buildMenuGrid();
+            this.refreshMenuItems(true);
          } else {
             all.getStyleClass().remove("chip-on");
          }
@@ -376,7 +398,7 @@ public class OrderController {
 
                tb.getStyleClass().add("chip-on");
                this.selectedCategoryId = cid;
-               this.buildMenuGrid();
+               this.refreshMenuItems(true);
             }
          });
          this.categoryChips.getChildren().add(tb);
@@ -614,8 +636,7 @@ public class OrderController {
       this.btnCancel.setDisable(!on || loneEmpty);
    }
 
-   private void buildMenuGrid() {
-      this.menuGrid.getChildren().clear();
+   private void refreshMenuItems(boolean resetPage) {
       String q = this.searchField.getText() == null ? "" : this.searchField.getText().trim();
 
       try {
@@ -625,20 +646,55 @@ public class OrderController {
          } else {
             items = this.menuRepository.searchByName(q, this.selectedCategoryId);
          }
-
-         int col = 0;
-         int row = 0;
-
-         for (MenuItem m : items) {
-            Node card = this.createMenuCard(m);
-            this.menuGrid.add(card, col, row);
-            if (++col >= 4) {
-               col = 0;
-               row++;
+         this.filteredMenuItems = items;
+         if (resetPage) {
+            this.currentMenuPage = 0;
+         } else {
+            int lastPageIndex = Math.max(0, this.computeTotalPages() - 1);
+            if (this.currentMenuPage > lastPageIndex) {
+               this.currentMenuPage = lastPageIndex;
             }
          }
+         this.renderCurrentMenuPage();
       } catch (Exception var8) {
          UiAlerts.error("Lỗi thực đơn", var8.getMessage());
+      }
+   }
+
+   private int computeTotalPages() {
+      return Math.max(1, (this.filteredMenuItems.size() + MENU_PAGE_SIZE - 1) / MENU_PAGE_SIZE);
+   }
+
+   private void renderCurrentMenuPage() {
+      this.menuGrid.getChildren().clear();
+      int start = this.currentMenuPage * MENU_PAGE_SIZE;
+      int end = Math.min(start + MENU_PAGE_SIZE, this.filteredMenuItems.size());
+      int col = 0;
+      int row = 0;
+
+      for (int i = start; i < end; i++) {
+         Node card = this.createMenuCard(this.filteredMenuItems.get(i));
+         this.menuGrid.add(card, col, row);
+         if (++col >= 4) {
+            col = 0;
+            row++;
+         }
+      }
+
+      this.updatePagingControls();
+   }
+
+   private void updatePagingControls() {
+      int totalPages = this.computeTotalPages();
+      int currentDisplayPage = this.currentMenuPage + 1;
+      if (this.lblPageInfo != null) {
+         this.lblPageInfo.setText("Trang " + currentDisplayPage + "/" + totalPages + " (" + this.filteredMenuItems.size() + " món)");
+      }
+      if (this.btnPrevPage != null) {
+         this.btnPrevPage.setDisable(this.currentMenuPage <= 0);
+      }
+      if (this.btnNextPage != null) {
+         this.btnNextPage.setDisable(this.currentMenuPage >= totalPages - 1);
       }
    }
 
@@ -667,14 +723,6 @@ public class OrderController {
       catL.getStyleClass().add("menu-card-cat");
       catL.setVisible(false);
       catL.setManaged(false);
-      box.setOnMouseEntered(e -> {
-         box.setScaleX(1.02);
-         box.setScaleY(1.02);
-      });
-      box.setOnMouseExited(e -> {
-         box.setScaleX(1.0);
-         box.setScaleY(1.0);
-      });
       if (!m.isAvailable()) {
          box.getStyleClass().add("unavailable");
          Label het = new Label("Hết món");
