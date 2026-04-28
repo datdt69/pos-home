@@ -118,7 +118,7 @@ public final class AppSettings {
    }
 
    public String getShopAddress() {
-      return n(this.props.getProperty(KEY_ADDRESS, ""));
+      return n(this.props.getProperty(KEY_ADDRESS, "164 Xô Viết Nghệ Tĩnh"));
    }
 
    public void setShopAddress(String s) {
@@ -126,7 +126,7 @@ public final class AppSettings {
    }
 
    public String getShopPhone() {
-      return n(this.props.getProperty(KEY_PHONE, ""));
+      return n(this.props.getProperty(KEY_PHONE, "0963723089"));
    }
 
    public void setShopPhone(String s) {

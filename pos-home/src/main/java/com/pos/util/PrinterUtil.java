@@ -152,7 +152,7 @@ public final class PrinterUtil {
       putAlign(buf, 1);
       putBold(buf, true);
       putDoubleSize(buf, true);
-      putTextNl(buf, nvl(shopName, "CUA HANG"));
+      putTextNl(buf, nvl(shopName, "MIXUE"));
       putDoubleSize(buf, false);
       putBold(buf, false);
       if (address != null && !address.isBlank()) {
@@ -161,45 +161,44 @@ public final class PrinterUtil {
       if (phone != null && !phone.isBlank()) {
          putTextNl(buf, "SĐT: " + phone);
       }
-      putTextNl(buf, repeat('=', maxLineChars));
+      putFeed(buf, 1);
+      putBold(buf, true);
+      putTextNl(buf, "PHIẾU THANH TOÁN");
+      putBold(buf, false);
+      putTextNl(buf, repeat('-', maxLineChars));
       putAlign(buf, 0);
-      putTextNl(buf, "Đơn số : " + (order.getOrderNumber() == null ? "—" : order.getOrderNumber()));
+      putTextNl(buf, "Mã phiếu: " + (order.getOrderNumber() == null ? "—" : order.getOrderNumber()));
       String t = "—";
       if (order.getPaidAt() != null) {
          t = order.getPaidAt().atZone(OrderRepository.VIETNAM).format(PrinterUtil.RECEIPT_DF);
       }
-      putTextNl(buf, "Ngày   : " + t);
-      putTextNl(buf, repeat('─', maxLineChars));
+      putTextNl(buf, "Giờ in: " + t);
+      putTextNl(buf, repeat('-', maxLineChars));
       putTextNl(buf, fitHeaderLine(maxLineChars));
-      putTextNl(buf, repeat('─', maxLineChars));
-      int i = 1;
+      putTextNl(buf, repeat('-', maxLineChars));
       for (OrderItem oi : items) {
          long lineTot = (long) Math.round(oi.getLineTotal());
+         long unitPrice = oi.getQuantity() > 0 ? Math.round(oi.getLineTotal() / oi.getQuantity()) : lineTot;
          putTextNl(
             buf,
             formatItemLine(
-               i,
                oi.getMenuName() == null ? "Món" : oi.getMenuName(),
                oi.getQuantity(),
+               vndNumber(unitPrice),
                vndNumber(lineTot),
                maxLineChars
             )
          );
-         i++;
       }
-      putTextNl(buf, repeat('─', maxLineChars));
+      putTextNl(buf, repeat('-', maxLineChars));
       putAlign(buf, 0);
       putBold(buf, true);
       putTextNl(
          buf,
-         "TỔNG CỘNG: " + vndNumber((long) Math.round(order.getTotal())) + " VND"
+         "Tổng cộng: " + vndNumber((long) Math.round(order.getTotal()))
       );
       putBold(buf, false);
-      putTextNl(buf, repeat('=', maxLineChars));
-      putAlign(buf, 1);
-      putTextNl(buf, "Cảm ơn quý khách!");
-      putTextNl(buf, "Hẹn gặp lại quý khách!");
-      putTextNl(buf, repeat('=', maxLineChars));
+      putTextNl(buf, repeat('-', maxLineChars));
       putAlign(buf, 0);
       putFeed(buf, 3);
       putPartialCut(buf);
@@ -216,32 +215,33 @@ public final class PrinterUtil {
       String phone
    ) throws IOException {
       StringBuilder s = new StringBuilder(2048);
-      s.append(nvl(shopName, "CUA HANG")).append('\n');
+      s.append(nvl(shopName, "MIXUE")).append('\n');
       if (address != null && !address.isBlank()) {
          s.append(address).append('\n');
       }
       if (phone != null && !phone.isBlank()) {
          s.append("SDT: ").append(phone).append('\n');
       }
-      s.append("====================================").append('\n');
-      s.append("Don so : ").append(order.getOrderNumber() == null ? "-" : order.getOrderNumber()).append('\n');
+      s.append('\n');
+      s.append("PHIEU THANH TOAN").append('\n');
+      s.append("------------------------------------").append('\n');
+      s.append("Ma phieu: ").append(order.getOrderNumber() == null ? "-" : order.getOrderNumber()).append('\n');
       String t = "-";
       if (order.getPaidAt() != null) {
          t = order.getPaidAt().atZone(OrderRepository.VIETNAM).format(PrinterUtil.RECEIPT_DF);
       }
-      s.append("Ngay   : ").append(t).append('\n');
+      s.append("Gio in: ").append(t).append('\n');
       s.append("------------------------------------").append('\n');
-      int idx = 1;
+      s.append(String.format("%-16s %3s %6s %8s", "Ten mon", "SL", "DG", "T.Tien")).append('\n');
+      s.append("------------------------------------").append('\n');
       for (OrderItem oi : items) {
          long lineTot = (long)Math.round(oi.getLineTotal());
-         s.append(idx).append(". ").append(nvl(oi.getMenuName(), "Mon")).append('\n');
-         s.append("   x").append(oi.getQuantity()).append("    ").append(vndNumber(lineTot)).append(" VND").append('\n');
-         idx++;
+         long unitPrice = oi.getQuantity() > 0 ? Math.round(oi.getLineTotal() / oi.getQuantity()) : lineTot;
+         s.append(formatWindowsItemLine(nvl(oi.getMenuName(), "Mon"), oi.getQuantity(), vndNumber(unitPrice), vndNumber(lineTot))).append('\n');
       }
       s.append("------------------------------------").append('\n');
-      s.append("TONG CONG: ").append(vndNumber((long)Math.round(order.getTotal()))).append(" VND").append('\n');
-      s.append("====================================").append('\n');
-      s.append("Cam on quy khach!").append('\n');
+      s.append("Tong cong: ").append(vndNumber((long)Math.round(order.getTotal()))).append('\n');
+      s.append("------------------------------------").append('\n');
       printTextWindows(printerName, s.toString(), paper);
    }
 
@@ -447,7 +447,7 @@ public final class PrinterUtil {
    }
 
    private static String fitHeaderLine(int w) {
-      String a = "STT Tên món      SL  Tiền";
+      String a = "Tên món            SL      ĐG    T.Tiền";
       if (a.length() >= w) {
          return a.substring(0, w);
       } else {
@@ -455,29 +455,33 @@ public final class PrinterUtil {
       }
    }
 
-   private static String formatItemLine(int stt, String name, int qty, String money, int w) {
+   private static String formatItemLine(String name, int qty, String unitPrice, String money, int w) {
       int moneyW = 9;
+      int unitW = 7;
       int qtyW = 3;
-      int g = 1;
-      int sttW = 2;
-      int nameW = w - sttW - g - qtyW - 1 - moneyW - 1;
+      int nameW = w - qtyW - 1 - unitW - 1 - moneyW - 1;
       if (nameW < 4) {
          nameW = 4;
-      }
-      String st = String.valueOf(stt);
-      if (st.length() > sttW) {
-         st = st.substring(0, sttW);
       }
       String n = trunc(nvl(name, ""), nameW);
       String q = String.valueOf(qty);
       if (q.length() > qtyW) {
          q = q.substring(0, qtyW);
       }
+      String u = unitPrice;
+      if (u.length() > unitW) {
+         u = u.substring(0, unitW);
+      }
       String m = money;
       if (m.length() > moneyW) {
          m = m.substring(0, moneyW);
       }
-      return padRight(st, sttW) + " " + padRight(n, nameW) + " " + padLeft(q, qtyW) + " " + padLeft(m, moneyW);
+      return padRight(n, nameW) + " " + padLeft(q, qtyW) + " " + padLeft(u, unitW) + " " + padLeft(m, moneyW);
+   }
+
+   private static String formatWindowsItemLine(String name, int qty, String unitPrice, String total) {
+      String n = trunc(nvl(name, ""), 15);
+      return String.format("%-15s %3s %6s %8s", n, qty, trunc(unitPrice, 6), trunc(total, 8));
    }
 
    private static String padLeft(String s, int w) {

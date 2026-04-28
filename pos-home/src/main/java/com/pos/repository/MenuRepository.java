@@ -85,6 +85,64 @@ public class MenuRepository {
       return list;
    }
 
+   public int countByFilter(String query, Integer categoryId) throws SQLException {
+      Connection conn = DBConnection.getInstance().getConnection();
+      String like = query != null && !query.isBlank() ? "%" + query.trim() + "%" : null;
+      StringBuilder sb = new StringBuilder("SELECT COUNT(1) FROM menu_item WHERE 1=1 ");
+      if (like != null) {
+         sb.append("AND name LIKE ? ");
+      }
+      if (categoryId != null) {
+         sb.append("AND category_id = ? ");
+      }
+
+      try (PreparedStatement ps = conn.prepareStatement(sb.toString())) {
+         int i = 1;
+         if (like != null) {
+            ps.setString(i++, like);
+         }
+         if (categoryId != null) {
+            ps.setInt(i, categoryId);
+         }
+         try (ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
+         }
+      }
+   }
+
+   public List<MenuItem> searchByNamePaged(String query, Integer categoryId, int limit, int offset) throws SQLException {
+      ArrayList<MenuItem> list = new ArrayList<>();
+      Connection conn = DBConnection.getInstance().getConnection();
+      String like = query != null && !query.isBlank() ? "%" + query.trim() + "%" : null;
+      StringBuilder sb = new StringBuilder("SELECT id, name, price, category_id, is_available FROM menu_item WHERE 1=1 ");
+      if (like != null) {
+         sb.append("AND name LIKE ? ");
+      }
+      if (categoryId != null) {
+         sb.append("AND category_id = ? ");
+      }
+      sb.append("ORDER BY name LIMIT ? OFFSET ?");
+
+      try (PreparedStatement ps = conn.prepareStatement(sb.toString())) {
+         int i = 1;
+         if (like != null) {
+            ps.setString(i++, like);
+         }
+         if (categoryId != null) {
+            ps.setInt(i++, categoryId);
+         }
+         ps.setInt(i++, Math.max(1, limit));
+         ps.setInt(i, Math.max(0, offset));
+         try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+               list.add(mapRow(rs));
+            }
+         }
+      }
+
+      return list;
+   }
+
    public Optional<MenuItem> findById(int id) throws SQLException {
       Connection conn = DBConnection.getInstance().getConnection();
 

@@ -13,6 +13,7 @@ import com.pos.util.MoneyFormat;
 import com.pos.util.PrinterUtil;
 import com.pos.util.UiAlerts;
 import javafx.beans.InvalidationListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -96,6 +97,7 @@ public class OrderController {
    private final ObservableList<OrderItem> lineItems = FXCollections.observableArrayList();
    private List<Category> categories = List.of();
    private List<MenuItem> filteredMenuItems = List.of();
+   private int totalMenuItems;
    private int currentMenuPage;
    private final Map<Integer, String> categoryNameById = new HashMap<>();
    private boolean inEnsureBlock;
@@ -306,7 +308,7 @@ public class OrderController {
    private void onPrevPage() {
       if (this.currentMenuPage > 0) {
          this.currentMenuPage--;
-         this.renderCurrentMenuPage();
+         this.refreshMenuItems(false);
       }
    }
 
@@ -315,7 +317,7 @@ public class OrderController {
       int totalPages = this.computeTotalPages();
       if (this.currentMenuPage < totalPages - 1) {
          this.currentMenuPage++;
-         this.renderCurrentMenuPage();
+         this.refreshMenuItems(false);
       }
    }
 
@@ -329,7 +331,7 @@ public class OrderController {
                this.orderItemRepository.updateQuantity(oi.getId(), q);
                this.orderRepository.recalculateTotal(oi.getOrderId());
                this.loadOrderDetails(oi.getOrderId());
-               this.refreshOrderTabs(null);
+               this.updateOpenOrderTabText(oi.getOrderId());
             } catch (Exception var5) {
                UiAlerts.error("Lỗi", var5.getMessage());
             }
@@ -346,7 +348,8 @@ public class OrderController {
                this.orderItemRepository.deleteById(oi.getId());
                this.orderRepository.recalculateTotal(oid);
                this.loadOrderDetails(oid);
-               this.refreshOrderTabs(null);
+               this.updateOpenOrderTabText(oid);
+               this.applyTabClosableRules();
             } catch (Exception var4) {
                UiAlerts.error("Lỗi", var4.getMessage());
             }
@@ -568,6 +571,24 @@ public class OrderController {
       }
    }
 
+   private void updateOpenOrderTabText(int orderId) {
+      for (Tab t : this.tabOpenOrders.getTabs()) {
+         Integer id = (Integer)t.getUserData();
+         if (id != null && id == orderId) {
+            try {
+               Optional<Order> o = this.orderRepository.findById(orderId);
+               if (o.isPresent()) {
+                  Order ord = o.get();
+                  t.setText(this.formatTabText(ord.getOrderNumber(), ord.getId(), this.lineItems.size(), ord.getTotal()));
+               }
+            } catch (Exception ignored) {
+            }
+            break;
+         }
+      }
+      this.updateOrderHeaderLabels();
+   }
+
    private void loadOrderDetails(int orderId) {
       try {
          Optional<Order> order = this.orderRepository.findById(orderId);
@@ -647,16 +668,18 @@ public class OrderController {
       String q = this.searchField.getText() == null ? "" : this.searchField.getText().trim();
 
       try {
-         List<MenuItem> items = this.findMenuItemsCached(q, this.selectedCategoryId);
-         this.filteredMenuItems = items;
          if (resetPage) {
             this.currentMenuPage = 0;
-         } else {
-            int lastPageIndex = Math.max(0, this.computeTotalPages() - 1);
-            if (this.currentMenuPage > lastPageIndex) {
-               this.currentMenuPage = lastPageIndex;
-            }
          }
+         List<MenuItem> allItems = this.findMenuItemsCached(q, this.selectedCategoryId);
+         this.totalMenuItems = allItems.size();
+         int lastPageIndex = Math.max(0, this.computeTotalPages() - 1);
+         if (this.currentMenuPage > lastPageIndex) {
+            this.currentMenuPage = lastPageIndex;
+         }
+         int from = this.currentMenuPage * MENU_PAGE_SIZE;
+         int to = Math.min(from + MENU_PAGE_SIZE, allItems.size());
+         this.filteredMenuItems = from < to ? new ArrayList<>(allItems.subList(from, to)) : List.of();
          this.renderCurrentMenuPage();
       } catch (Exception var8) {
          UiAlerts.error("Lỗi thực đơn", var8.getMessage());
@@ -682,18 +705,16 @@ public class OrderController {
    }
 
    private int computeTotalPages() {
-      return Math.max(1, (this.filteredMenuItems.size() + MENU_PAGE_SIZE - 1) / MENU_PAGE_SIZE);
+      return Math.max(1, (this.totalMenuItems + MENU_PAGE_SIZE - 1) / MENU_PAGE_SIZE);
    }
 
    private void renderCurrentMenuPage() {
       this.menuGrid.getChildren().clear();
-      int start = this.currentMenuPage * MENU_PAGE_SIZE;
-      int end = Math.min(start + MENU_PAGE_SIZE, this.filteredMenuItems.size());
       int col = 0;
       int row = 0;
 
-      for (int i = start; i < end; i++) {
-         Node card = this.createMenuCard(this.filteredMenuItems.get(i));
+      for (MenuItem item : this.filteredMenuItems) {
+         Node card = this.createMenuCard(item);
          this.menuGrid.add(card, col, row);
          if (++col >= 4) {
             col = 0;
@@ -708,7 +729,7 @@ public class OrderController {
       int totalPages = this.computeTotalPages();
       int currentDisplayPage = this.currentMenuPage + 1;
       if (this.lblPageInfo != null) {
-         this.lblPageInfo.setText("Trang " + currentDisplayPage + "/" + totalPages + " (" + this.filteredMenuItems.size() + " món)");
+         this.lblPageInfo.setText("Trang " + currentDisplayPage + "/" + totalPages + " (" + this.totalMenuItems + " món)");
       }
       if (this.btnPrevPage != null) {
          this.btnPrevPage.setDisable(this.currentMenuPage <= 0);
@@ -767,7 +788,7 @@ public class OrderController {
                this.orderItemRepository.addOrIncrement(oid, m.getId(), m.getPrice());
                this.orderRepository.recalculateTotal(oid);
                this.loadOrderDetails(oid);
-               this.refreshOrderTabs(null);
+               this.updateOpenOrderTabText(oid);
                box.getStyleClass().add("menu-card-picked");
                PauseTransition p = new PauseTransition(Duration.millis(180.0));
                p.setOnFinished(ex -> box.getStyleClass().remove("menu-card-picked"));
