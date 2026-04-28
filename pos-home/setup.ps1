@@ -342,33 +342,50 @@ function Get-JavaMajor {
   return 0, $null
 }
 
+function Test-JavaExeIsX86 {
+  param([string]$javaExe)
+  if (-not $javaExe) { return $false }
+  if (-not (Test-Path -LiteralPath $javaExe)) { return $false }
+  try {
+    $raw = & $javaExe -XshowSettings:properties -version 2>&1
+    $s = ($raw | ForEach-Object {
+      if ($null -eq $_) { "" }
+      elseif ($_ -is [System.Management.Automation.ErrorRecord]) { $_.ToString() }
+      else { $_.ToString() }
+    }) -join "`n"
+    return ($s -match "sun\.arch\.data\.model\s*=\s*32")
+  } catch {
+    return $false
+  }
+}
+
 function Apply-Java11ToSession {
   Refresh-PathFromRegistry
   $ma, $jPath = Get-JavaMajor
-  if ($ma -ge $MinJdk) { return $ma, $jPath, $env:JAVA_HOME }
+  if ($ma -ge $MinJdk -and (Test-JavaExeIsX86 -javaExe $jPath)) { return $ma, $jPath, $env:JAVA_HOME }
   $sysJh = Get-JavaHomeFromSystemEnv
   if ($sysJh) {
     $a1, $b1, $c1 = Try-JdkRoot -root $sysJh
-    if ($a1 -ge $MinJdk) { return $a1, $b1, $c1 }
+    if ($a1 -ge $MinJdk -and (Test-JavaExeIsX86 -javaExe $b1)) { return $a1, $b1, $c1 }
   }
   $a2, $b2, $c2 = Try-Java11InPath
-  if ($a2 -ge $MinJdk) { return $a2, $b2, $c2 }
+  if ($a2 -ge $MinJdk -and (Test-JavaExeIsX86 -javaExe $b2)) { return $a2, $b2, $c2 }
   foreach ($jdkR in (Get-JavaHomeFromRegistry)) {
     if (-not $jdkR) { continue }
     $a3, $b3, $c3 = Try-JdkRoot -root $jdkR
-    if ($a3 -ge $MinJdk) { return $a3, $b3, $c3 }
+    if ($a3 -ge $MinJdk -and (Test-JavaExeIsX86 -javaExe $b3)) { return $a3, $b3, $c3 }
   }
   $m3, $j3, $h3 = Find-UseJava11UnderRoots
-  if ($m3 -ge $MinJdk) { return $m3, $j3, $h3 }
+  if ($m3 -ge $MinJdk -and (Test-JavaExeIsX86 -javaExe $j3)) { return $m3, $j3, $h3 }
   $m4, $j4, $h4 = Find-Java11WhereR
-  if ($m4 -ge $MinJdk) { return $m4, $j4, $h4 }
+  if ($m4 -ge $MinJdk -and (Test-JavaExeIsX86 -javaExe $j4)) { return $m4, $j4, $h4 }
   return 0, $null, $null
 }
 
 # --- chinh: JDK 11+ ---
 $ver, $jPath, $jHome = Apply-Java11ToSession
 if ($ver -ge $MinJdk) {
-  Write-Host ("OK: Phat hien Java {0} ({1}) - dung, bo qua cai JDK." -f $ver, $jPath) -ForegroundColor Green
+  Write-Host ("OK: Phat hien Java x86 {0} ({1}) - dung, bo qua cai JDK." -f $ver, $jPath) -ForegroundColor Green
 } else {
   if ($ver -gt 0) {
     Write-Host "Hien co Java $ver, ung dung can JDK $MinJdk+ . Dang cai them..." -ForegroundColor Yellow
