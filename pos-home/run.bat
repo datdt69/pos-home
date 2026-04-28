@@ -167,6 +167,7 @@ exit /b 0
 
 :find_java11_x86
 set "JAVA_CMD="
+(echo [%date% %time%] STEP java_check_java_home)>>"%RL%"
 
 if defined JAVA_HOME if exist "!JAVA_HOME!\bin\java.exe" (
   call :is_java11 "!JAVA_HOME!\bin\java.exe"
@@ -177,6 +178,7 @@ if defined JAVA_HOME if exist "!JAVA_HOME!\bin\java.exe" (
 )
 
 set "_PJD=%LOCALAPPDATA%\pos-jdk"
+(echo [%date% %time%] STEP java_check_pos_jdk)>>"%RL%"
 if exist "!_PJD!\" for /d %%D in ("!_PJD!\zulu11*") do (
   if exist "%%~D\bin\java.exe" (
     call :is_java11 "%%~D\bin\java.exe"
@@ -187,6 +189,7 @@ if exist "!_PJD!\" for /d %%D in ("!_PJD!\zulu11*") do (
   )
 )
 
+(echo [%date% %time%] STEP java_check_adoptium_x86)>>"%RL%"
 for /d %%D in ("C:\Program Files (x86)\Eclipse Adoptium\*") do (
   if exist "%%~D\bin\java.exe" (
     call :is_java11 "%%~D\bin\java.exe"
@@ -197,6 +200,7 @@ for /d %%D in ("C:\Program Files (x86)\Eclipse Adoptium\*") do (
   )
 )
 
+(echo [%date% %time%] STEP java_check_java_x86)>>"%RL%"
 for /d %%D in ("C:\Program Files (x86)\Java\jdk-11*") do (
   if exist "%%~D\bin\java.exe" (
     call :is_java11 "%%~D\bin\java.exe"
@@ -207,13 +211,7 @@ for /d %%D in ("C:\Program Files (x86)\Java\jdk-11*") do (
   )
 )
 
-for /f "delims=" %%W in ('where java 2^>nul') do (
-  call :is_java11 "%%W"
-  if not errorlevel 1 (
-    call :is_x86 "%%W"
-    if not errorlevel 1 (set "JAVA_CMD=%%W" & exit /b 0)
-  )
-)
+(echo [%date% %time%] STEP java_not_found)>>"%RL%"
 exit /b 1
 
 :is_java11
